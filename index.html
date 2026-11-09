@@ -17,6 +17,23 @@
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
 
+    <!-- Configuração e Carregamento do MathJax para Renderização de Fórmulas Matemáticas -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+        </script>
+
     <style>
         :root {
             --bg-main: #020617;
@@ -131,6 +148,46 @@
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             border-right: 1px solid rgba(255, 255, 255, 0.05);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Caixa de Cálculo Numérico Detalhado */
+        .calc-box {
+            background: #010409;
+            border: 1.5px solid #1e293b;
+            border-left: 5px solid #38bdf8;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.25rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: #e2e8f0;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .calc-box .calc-title {
+            color: #38bdf8;
+            font-weight: 800;
+            font-size: 1.15rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .calc-box .step-line {
+            padding-left: 1rem;
+            border-left: 2px solid #334155;
+            margin: 0.45rem 0;
+        }
+
+        .calc-box .result-highlight {
+            color: #34d399;
+            font-weight: 800;
+            background: rgba(52, 211, 153, 0.12);
+            padding: 3px 10px;
+            border-radius: 6px;
+            display: inline-block;
         }
 
         .navbar-tech {
@@ -514,7 +571,7 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="aula-tab" data-bs-toggle="tab" data-bs-target="#aula" type="button"
                         role="tab">
-                        <i class="bi bi-journal-code me-2"></i>3. Teoria Completa &amp; Comparativo Físico
+                        <i class="bi bi-journal-code me-2"></i>3. Teoria Completa, Cálculos &amp; Fórmulas Resolvidas
                     </button>
                 </li>
             </ul>
@@ -548,9 +605,9 @@
                             Matemático da Camada de Enlace (FCS - Frame Check Sequence):</div>
                         <p class="text-white mb-0 fs-5">
                             O <strong>Cyclic Redundancy Check (CRC)</strong> baseia-se na teoria dos anéis de polinômios
-                            sobre o corpo finito $\mathbb{F}_2$. A mensagem de $k$ bits é tratada como um polinômio
-                            $M(x)$ de grau $k-1$. Ao multiplicá-la por $x^r$ (onde $r$ é o grau do gerador $G(x)$),
-                            criam-se $r$ posições binárias ao final. A divisão módulo 2 gera um resto $R(x)$ de
+                            sobre o corpo binário finito $\mathbb{F}_2$. A mensagem de $k$ bits é tratada como um
+                            polinômio $M(x)$ de grau $k-1$. Ao multiplicá-la por $x^r$ (onde $r$ é o grau do gerador
+                            $G(x)$), criam-se $r$ posições binárias ao final. A divisão módulo 2 gera um resto $R(x)$ de
                             exatamente $r$ bits. A palavra-código transmitida $T(x) = M(x) \cdot x^r \oplus R(x)$ é, por
                             definição matemática, perfeitamente divisível por $G(x)$.
                         </p>
@@ -1236,6 +1293,107 @@
                             <strong class="text-info">PSK</strong> (<em>Phase Shift Keying</em>).
                         </li>
                     </ul>
+
+                    <!-- SEÇÃO DE CÁLCULOS RESOLVIDOS PASSO A PASSO -->
+                    <div class="tech-divider"></div>
+
+                    <h4 class="fw-bold text-info mb-3 fs-3">
+                        <i class="bi bi-calculator me-2"></i>Memória de Cálculo: Resolução Numérica Passo a Passo da
+                        Onda Senoidal Modulada
+                    </h4>
+                    <p class="text-white fs-5 mb-3">
+                        Considere um transmissor operando com taxa binária de $R_b = 1000\text{ bps}$ e amplitude de
+                        pico $A = 5\text{ V}$.
+                        O tempo de duração de cada bit é dado por:
+                    </p>
+                    <div class="calc-box mb-4">
+                        <div class="calc-title"><i class="bi bi-clock-history"></i> 1. Cálculo do Período de Bit ($T_b$)
+                            e Frequência da Portadora ($f_c$):</div>
+                        <div class="step-line">Fórmula: $T_b = \frac{1}{R_b}$</div>
+                        <div class="step-line">Substituindo valores: $T_b = \frac{1}{1000\text{ bits/s}} = 0,001\text{
+                            s} = 1\text{ ms} = 1000\ \mu\text{s}$</div>
+                        <div class="step-line">Se a portadora tiver $N = 5\text{ ciclos}$ por intervalo de bit:</div>
+                        <div class="step-line">Frequência da portadora: $f_c = \frac{N}{T_b} = \frac{5}{0,001\text{ s}}
+                            = 5000\text{ Hz} = 5\text{ kHz}$</div>
+                        <div class="step-line">Período de um único ciclo da portadora: $T_c = \frac{1}{f_c} =
+                            \frac{1}{5000} = 0,0002\text{ s} = 200\ \mu\text{s}$</div>
+                        <div class="result-highlight mt-2">Resultado: $T_b = 1\text{ ms}$, $f_c = 5\text{ kHz}$,
+                            $\omega_c = 2\pi f_c = 10000\pi \approx 31415,9\text{ rad/s}$</div>
+                    </div>
+
+                    <!-- Demonstração de Cálculo da Tensão Instantânea em ASK, FSK e PSK -->
+                    <div class="calc-box mb-4">
+                        <div class="calc-title"><i class="bi bi-lightning-charge"></i> 2. Cálculo da Tensão Instantânea
+                            $s(t)$ no Instante $t = 50\ \mu\text{s}$ ($1/4$ do primeiro ciclo):</div>
+                        <div class="step-line">Instante avaliado: $t = 50\ \mu\text{s} = 0,00005\text{ s}$</div>
+                        <div class="step-line">Ângulo base da senoide: $\theta = 2\pi \cdot f_c \cdot t = 2\pi \cdot
+                            5000 \cdot 0,00005 = 2\pi \cdot 0,25 = \frac{\pi}{2}\text{ rad} = 90^\circ$</div>
+                        <div class="step-line mt-2"><strong>A) Modulação ASK (Amplitude Shift Keying - OOK):</strong>
+                        </div>
+                        <div class="step-line">&bull; Se bit = 1: $A = 5\text{ V} \implies s(0,00005) = 5 \cdot
+                            \text{sen}(90^\circ) = 5 \cdot 1 =$ <span class="result-highlight">+5,00 V (Tensão
+                                Máxima)</span></div>
+                        <div class="step-line">&bull; Se bit = 0: $A = 0\text{ V} \implies s(0,00005) = 0 \cdot
+                            \text{sen}(90^\circ) = 0 \cdot 1 =$ <span class="result-highlight">0,00 V (Silêncio no
+                                Canal)</span></div>
+
+                        <div class="step-line mt-3"><strong>B) Modulação FSK (Frequency Shift Keying):</strong></div>
+                        <div class="step-line">Definindo $f_1 = 10\text{ kHz}$ (frequência alta para bit 1) e $f_0 =
+                            5\text{ kHz}$ (frequência baixa para bit 0):</div>
+                        <div class="step-line">&bull; Se bit = 1: $\theta_1 = 2\pi \cdot 10000 \cdot 0,00005 = \pi\text{
+                            rad} = 180^\circ \implies s(0,00005) = 5 \cdot \text{sen}(180^\circ) =$ <span
+                                class="result-highlight">0,00 V (Cruzamento por Zero)</span></div>
+                        <div class="step-line">&bull; Se bit = 0: $\theta_0 = 2\pi \cdot 5000 \cdot 0,00005 =
+                            \frac{\pi}{2}\text{ rad} = 90^\circ \implies s(0,00005) = 5 \cdot \text{sen}(90^\circ) =$
+                            <span class="result-highlight">+5,00 V (Pico Positivo)</span></div>
+
+                        <div class="step-line mt-3"><strong>C) Modulação PSK (Phase Shift Keying - BPSK):</strong></div>
+                        <div class="step-line">Frequência $f_c = 5\text{ kHz}$ constante. Fase $\phi = 0^\circ$ para bit
+                            1 e $\phi = 180^\circ (\pi\text{ rad})$ para bit 0:</div>
+                        <div class="step-line">&bull; Se bit = 1: $s(0,00005) = 5 \cdot \text{sen}(90^\circ + 0^\circ) =
+                            5 \cdot 1 =$ <span class="result-highlight">+5,00 V</span></div>
+                        <div class="step-line">&bull; Se bit = 0: $s(0,00005) = 5 \cdot \text{sen}(90^\circ + 180^\circ)
+                            = 5 \cdot \text{sen}(270^\circ) = 5 \cdot (-1) =$ <span class="result-highlight">-5,00 V
+                                (Inversão de Polaridade)</span></div>
+                    </div>
+
+                    <!-- Fórmulas Físicas de Nyquist e Shannon com Contas até o Fim -->
+                    <div class="calc-box mb-2">
+                        <div class="calc-title"><i class="bi bi-graph-up-arrow"></i> 3. Limites Físicos Fundamentais:
+                            Teorema de Nyquist e Capacidade de Shannon-Hartley</div>
+                        <p class="text-white-50 mb-2">Para determinar quantos bits por segundo um meio analógico pode
+                            transportar, a Engenharia de Telecomunicações utiliza dois teoremas universais:</p>
+
+                        <div class="step-line"><strong>A) Teorema de Nyquist (Canal Ideal Sem Ruído):</strong></div>
+                        <div class="step-line">Fórmula: $C_{\text{Nyquist}} = 2 \cdot B \cdot \log_2(M)$</div>
+                        <div class="step-line">Onde $B$ é a largura de banda em Hertz e $M$ é o número de
+                            estados/símbolos discretos.</div>
+                        <div class="step-line">Exemplo para um canal telefônico analógico com $B = 3100\text{ Hz}$ e
+                            modulação binária BPSK ($M = 2$):</div>
+                        <div class="step-line">Conta: $C = 2 \cdot 3100 \cdot \log_2(2) = 6200 \cdot 1 =$ <span
+                                class="result-highlight">6.200 bps (6,2 kbps)</span></div>
+                        <div class="step-line">Se usarmos modulação 16-QAM ($M = 16$ estados com 4 bits/símbolo):</div>
+                        <div class="step-line">Conta: $C = 2 \cdot 3100 \cdot \log_2(16) = 6200 \cdot 4 =$ <span
+                                class="result-highlight">24.800 bps (24,8 kbps)</span></div>
+
+                        <div class="step-line mt-3"><strong>B) Fórmula de Shannon-Hartley (Canal Real com Ruído Térmico
+                                AWGN):</strong></div>
+                        <div class="step-line">Fórmula: $C_{\text{Shannon}} = B \cdot \log_2\left(1 + \text{SNR}\right)$
+                        </div>
+                        <div class="step-line">Considere um canal Wi-Fi de $B = 20\text{ MHz} = 20.000.000\text{ Hz}$
+                            com relação sinal-ruído de $\text{SNR}_{\text{dB}} = 30\text{ dB}$:</div>
+                        <div class="step-line">1º Passo: Converter dB para escala linear de potência:</div>
+                        <div class="step-line">$\text{SNR}_{\text{linear}} = 10^{\frac{\text{SNR}_{\text{dB}}}{10}} =
+                            10^{\frac{30}{10}} = 10^3 = 1000$ (O sinal é 1000 vezes mais forte que o ruído)</div>
+                        <div class="step-line">2º Passo: Calcular o termo logarítmico na base 2:</div>
+                        <div class="step-line">$\log_2(1 + 1000) = \log_2(1001) = \frac{\ln(1001)}{\ln(2)} \approx
+                            \frac{6,908755}{0,693147} \approx 9,9672\text{ bits/s/Hz}$ (Eficiência Espectral Máxima)
+                        </div>
+                        <div class="step-line">3º Passo: Multiplicar pela largura de banda $B$:</div>
+                        <div class="step-line">$C = 20.000.000 \cdot 9,9672 = 199.344.000\text{ bps}$</div>
+                        <div class="result-highlight mt-2">Capacidade Teórica Máxima Absoluta: $C \approx 199,34\text{
+                            Mbps}$</div>
+                    </div>
                 </div>
 
                 <!-- Teoria das 3 Modulações -->
@@ -1253,6 +1411,14 @@
                                 <li class="mb-2"><strong>Bit 0:</strong> Ausência total de oscilação (<span
                                         class="font-bits text-white-50">A = 0</span>).</li>
                             </ul>
+                            <div class="calc-box p-3 mb-3 fs-6">
+                                <div class="text-warning fw-bold mb-1"><i class="bi bi-calculator"></i> Largura de Banda
+                                    de Nyquist (ASK):</div>
+                                <div>$B_{\text{ASK}} = (1 + \alpha) \cdot R_b$</div>
+                                <div>Para $R_b = 1000\text{ bps}$ e fator de decaimento $\alpha = 0,5$:</div>
+                                <div>$B = (1 + 0,5) \cdot 1000 =$ <span class="text-success fw-bold">1500 Hz</span>
+                                </div>
+                            </div>
                             <div class="fs-5">
                                 <strong class="text-success">✓ Vantagem:</strong>
                                 <p class="text-white mb-3">Circuitos transmissores e receptores extremamente simples e
@@ -1280,6 +1446,14 @@
                                 <li class="mb-2"><strong>Bit 0:</strong> Frequência baixa (<span
                                         class="font-bits text-white-50">f₀</span>, espaço).</li>
                             </ul>
+                            <div class="calc-box p-3 mb-3 fs-6">
+                                <div class="text-success fw-bold mb-1"><i class="bi bi-calculator"></i> Regra de Banda
+                                    de Carson (FSK):</div>
+                                <div>$B_{\text{FSK}} \approx 2 \cdot \Delta f + 2 \cdot R_b$</div>
+                                <div>Para desvio $\Delta f = 2500\text{ Hz}$ e $R_b = 1000\text{ bps}$:</div>
+                                <div>$B = 2(2500) + 2(1000) = 5000 + 2000 =$ <span class="text-success fw-bold">7000 Hz
+                                        (7 kHz)</span></div>
+                            </div>
                             <div class="fs-5">
                                 <strong class="text-success">✓ Vantagem:</strong>
                                 <p class="text-white mb-3">Elevada imunidade contra ruídos de amplitude, pois o dado
@@ -1307,6 +1481,14 @@
                                 <li class="mb-2"><strong>Bit 0:</strong> Inversão instantânea de <span
                                         class="font-bits text-danger">180&deg; (&pi;)</span>.</li>
                             </ul>
+                            <div class="calc-box p-3 mb-3 fs-6">
+                                <div class="text-info fw-bold mb-1"><i class="bi bi-calculator"></i> Eficiência
+                                    Energética e BER (BPSK):</div>
+                                <div>$P_b = Q\left(\sqrt{\frac{2E_b}{N_0}}\right)$</div>
+                                <div>Para $\frac{E_b}{N_0} = 9,6\text{ dB} \approx 9,12$ linear:</div>
+                                <div>$\sqrt{2 \cdot 9,12} = \sqrt{18,24} \approx 4,27 \implies P_b \approx$ <span
+                                        class="text-success fw-bold">$10^{-5}$ (1 erro em 100.000 bits)</span></div>
+                            </div>
                             <div class="fs-5">
                                 <strong class="text-success">✓ Vantagem:</strong>
                                 <p class="text-white mb-3">Melhor taxa de transmissão por watt consumido em canais
@@ -1403,6 +1585,66 @@
                                         divisão pelo mesmo polinômio: <strong>se o resto for zero, o quadro é
                                             aceito!</strong></li>
                                 </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fórmulas Matemáticas do Desempenho Físico: Wi-Fi vs Cabo -->
+                    <div class="tech-divider"></div>
+
+                    <h4 class="fw-bold text-info mb-3 fs-3">
+                        <i class="bi bi-stopwatch me-2"></i>Memória de Cálculo: Por Que o Wi-Fi Perde na Velocidade?
+                        (Contas de CSMA/CA vs Full-Duplex)
+                    </h4>
+                    <div class="row g-4">
+                        <div class="col-12 col-lg-6">
+                            <div class="calc-box h-100">
+                                <div class="calc-title"><i class="bi bi-wifi"></i> Cálculo do Tempo Gasto por Pacote no
+                                    Wi-Fi (IEEE 802.11):</div>
+                                <div class="step-line">Fórmula de ciclo no ar:</div>
+                                <div class="step-line">$T_{\text{ciclo}} = \text{DIFS} + T_{\text{backoff}} +
+                                    T_{\text{DATA}} + \text{SIFS} + T_{\text{ACK}}$</div>
+                                <div class="step-line mt-2">Valores normativos do Wi-Fi:</div>
+                                <div class="step-line">&bull; $\text{Slot Time} = 9\ \mu\text{s}$ | $\text{SIFS} = 16\
+                                    \mu\text{s}$</div>
+                                <div class="step-line">&bull; $\text{DIFS} = \text{SIFS} + 2 \cdot \text{Slot Time} = 16
+                                    + 18 = 34\ \mu\text{s}$</div>
+                                <div class="step-line">&bull; Janela de Contenção Média ($CW_{\min} = 15$ slots):</div>
+                                <div class="step-line"> $T_{\text{backoff}} = \frac{15}{2} \cdot 9\ \mu\text{s} = 67,5\
+                                    \mu\text{s}$</div>
+                                <div class="step-line">&bull; Transmissão de quadro 1500 bytes a 300 Mbps:
+                                    $T_{\text{DATA}} = 40\ \mu\text{s}$</div>
+                                <div class="step-line">&bull; Quadro de confirmação: $T_{\text{ACK}} = 24\ \mu\text{s}$
+                                </div>
+                                <div class="step-line mt-2">Soma total de tempo gasto no ar:</div>
+                                <div class="step-line">$T_{\text{ciclo}} = 34 + 67,5 + 40 + 16 + 24 = 181,5\
+                                    \mu\text{s}$</div>
+                                <div class="step-line">Fração útil de dados: $\frac{40\ \mu\text{s}}{181,5\ \mu\text{s}}
+                                    \approx 22\%$</div>
+                                <div class="result-highlight mt-2">Perda por Overhead e Fila: Mais de 70% do tempo do
+                                    Wi-Fi não transporta dados úteis!</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6">
+                            <div class="calc-box h-100" style="border-left-color: #4ade80;">
+                                <div class="calc-title" style="color: #4ade80;"><i class="bi bi-ethernet"></i> Cálculo
+                                    do Tempo Gasto por Pacote no Cabo (Ethernet Cat 6):</div>
+                                <div class="step-line">Fórmula no meio guiado Full-Duplex:</div>
+                                <div class="step-line">$T_{\text{ciclo}} = T_{\text{DATA}} + \text{IFG}$ (Sem espera de
+                                    ACKs no meio físico, sem contenção)</div>
+                                <div class="step-line mt-2">Valores normativos do Gigabit Ethernet:</div>
+                                <div class="step-line">&bull; Interpacket Gap ($\text{IFG}$) = 96 bits time = $0,096\
+                                    \mu\text{s}$</div>
+                                <div class="step-line">&bull; Pacote MTU 1500 bytes a 1000 Mbps:</div>
+                                <div class="step-line"> $T_{\text{DATA}} = \frac{1518 \cdot 8\text{ bits}}{10^9\text{
+                                    bps}} = \frac{12144}{10^9} = 12,144\ \mu\text{s}$</div>
+                                <div class="step-line mt-2">Tempo total por quadro:</div>
+                                <div class="step-line">$T_{\text{ciclo}} = 12,144 + 0,096 = 12,24\ \mu\text{s}$</div>
+                                <div class="step-line">Fração útil de dados: $\frac{12,00\ \mu\text{s}}{12,24\
+                                    \mu\text{s}} \approx 98\%$</div>
+                                <div class="result-highlight mt-2">Rendimento Real do Cabo: 98% da velocidade contratada
+                                    é entregue em dados puros!</div>
                             </div>
                         </div>
                     </div>
@@ -2534,6 +2776,9 @@
             animarTopologias();
             animarDefeitosCabo();
             animarCorrida();
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
         });
 
         window.addEventListener('resize', () => {
