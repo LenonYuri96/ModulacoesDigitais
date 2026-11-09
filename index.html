@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TeleLab: CRC &amp; Modulações Digitais</title>
+    <title>TeleLab: Redes de Computadores, CRC &amp; Modulações</title>
 
     <!-- Bootstrap 5 CSS & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Google Fonts para tipografia legível e moderna -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -20,25 +20,27 @@
     <style>
         :root {
             --bg-main: #020617;
-            --bg-gradient: radial-gradient(circle at 15% 50%, rgba(8, 145, 178, 0.12), transparent 45%),
-                radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.12), transparent 45%);
-            --card-bg: rgba(15, 23, 42, 0.78);
-            --card-border: rgba(71, 85, 105, 0.65);
+            --bg-gradient: radial-gradient(circle at 15% 50%, rgba(8, 145, 178, 0.18), transparent 45%),
+                radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.18), transparent 45%);
+            --card-bg: rgba(15, 23, 42, 0.94);
+            --card-border: rgba(100, 116, 139, 0.65);
             --primary-cyan: #22d3ee;
             --ask-color: #fbbf24;
             --fsk-color: #34d399;
             --psk-color: #60a5fa;
             --base-color: #c084fc;
-            --text-main: #ffffff;
+            --text-main: #f8fafc;
             --text-soft: #cbd5e1;
             --danger: #f87171;
+            --wifi-orange: #fb923c;
+            --cable-green: #4ade80;
         }
 
         * {
             -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
         }
 
-        /* TIPOGRAFIA GLOBAL AUMENTADA */
         body {
             background-color: var(--bg-main);
             background-image: var(--bg-gradient);
@@ -46,66 +48,93 @@
             color: var(--text-main);
             font-family: 'Outfit', system-ui, sans-serif;
             font-size: 1.15rem;
-            /* Base ampliada de 16px para ~18.5px */
             line-height: 1.7;
             min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* Tipografia Monoespaçada para Códigos e Fórmulas */
         .font-bits,
         code,
         .math-formula,
-        .xor-step {
+        .xor-step,
+        .rx-step {
             font-family: 'JetBrains Mono', 'Courier New', monospace !important;
-            letter-spacing: 2px;
+            letter-spacing: 1.2px;
         }
 
-        /* ---------- Efeito Glassmorphism nos Cards ---------- */
         .card-tech {
             background: var(--card-bg);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1.5px solid var(--card-border);
             border-radius: 20px;
-            box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.7);
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            opacity: 0;
-            transform: translateY(20px);
         }
 
         .card-tech:hover {
-            border-color: rgba(34, 211, 238, 0.45);
-            box-shadow: 0 18px 45px -10px rgba(34, 211, 238, 0.2);
+            border-color: rgba(34, 211, 238, 0.55);
+            box-shadow: 0 18px 45px -10px rgba(34, 211, 238, 0.25);
         }
 
-        @keyframes slideUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Linhas Divisórias Estilizadas com Efeito Neon */
+        .tech-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-cyan), rgba(129, 140, 248, 0.8), transparent);
+            margin: 2.5rem 0;
+            opacity: 0.7;
         }
 
-        .delay-1 {
-            animation-delay: 0.1s;
+        .tech-divider-warning {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--ask-color), rgba(248, 113, 113, 0.8), transparent);
+            margin: 2.5rem 0;
+            opacity: 0.7;
         }
 
-        .delay-2 {
-            animation-delay: 0.2s;
+        .tech-divider-success {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--fsk-color), var(--primary-cyan), transparent);
+            margin: 2.5rem 0;
+            opacity: 0.7;
         }
 
-        .delay-3 {
-            animation-delay: 0.3s;
+        /* Caixas de Destaque e Explicações Complementares */
+        .academic-callout {
+            background: rgba(2, 6, 23, 0.85);
+            border-left: 5px solid var(--primary-cyan);
+            border-radius: 12px;
+            padding: 1.25rem 1.75rem;
+            margin: 1.5rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .delay-4 {
-            animation-delay: 0.4s;
+        .academic-callout-warning {
+            background: rgba(2, 6, 23, 0.85);
+            border-left: 5px solid var(--wifi-orange);
+            border-radius: 12px;
+            padding: 1.25rem 1.75rem;
+            margin: 1.5rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* ---------- Barra de Topo ---------- */
+        .academic-callout-success {
+            background: rgba(2, 6, 23, 0.85);
+            border-left: 5px solid var(--cable-green);
+            border-radius: 12px;
+            padding: 1.25rem 1.75rem;
+            margin: 1.5rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
         .navbar-tech {
-            background: rgba(2, 6, 23, 0.92);
+            background: rgba(2, 6, 23, 0.95);
             backdrop-filter: blur(12px);
             border-bottom: 2px solid var(--card-border);
             position: sticky;
@@ -121,62 +150,60 @@
             font-size: 1.85rem;
         }
 
-        /* ---------- Abas Customizadas (Tabs) com Tamanho Grande ---------- */
         .nav-tech {
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.95);
             padding: 8px;
             border-radius: 16px;
             border: 1.5px solid var(--card-border);
             display: inline-flex;
             gap: 8px;
             backdrop-filter: blur(8px);
+            flex-wrap: wrap;
         }
 
         .nav-tech .nav-link {
             color: var(--text-soft);
             border-radius: 12px;
             font-weight: 700;
-            font-size: 1.25rem;
-            padding: 12px 32px;
+            font-size: 1.15rem;
+            padding: 12px 26px;
             transition: all 0.3s ease;
             border: none;
         }
 
         .nav-tech .nav-link:hover {
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .nav-tech .nav-link.active {
             background: linear-gradient(135deg, rgba(34, 211, 238, 0.25), rgba(129, 140, 248, 0.25));
             color: var(--primary-cyan);
-            box-shadow: 0 0 20px rgba(34, 211, 238, 0.25);
-            border: 1.5px solid rgba(34, 211, 238, 0.45);
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
+            border: 1.5px solid rgba(34, 211, 238, 0.5);
         }
 
-        /* ---------- Inputs e Botões com Letras Grandes ---------- */
         .form-control {
-            background: rgba(0, 0, 0, 0.5) !important;
+            background: #030712 !important;
             border: 1.5px solid var(--card-border) !important;
-            color: var(--text-main) !important;
+            color: #ffffff !important;
             font-size: 1.35rem !important;
             padding: 12px 18px !important;
-            transition: all 0.3s ease;
         }
 
         .form-control:focus {
             border-color: var(--primary-cyan) !important;
             box-shadow: 0 0 0 5px rgba(34, 211, 238, 0.25) !important;
-            background: rgba(0, 0, 0, 0.75) !important;
         }
 
         .btn-tech {
             background: linear-gradient(135deg, #06b6d4, #3b82f6);
             border: none;
-            color: white;
+            color: #ffffff;
             font-weight: 700;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             padding: 12px 24px;
+            border-radius: 12px;
             transition: all 0.3s ease;
             box-shadow: 0 6px 20px rgba(6, 182, 212, 0.35);
         }
@@ -184,70 +211,155 @@
         .btn-tech:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(6, 182, 212, 0.55);
-            color: white;
-        }
-
-        .btn-tech:active {
-            transform: translateY(1px);
+            color: #ffffff;
         }
 
         .btn-outline-cyan {
             color: var(--primary-cyan);
             border: 1.5px solid rgba(34, 211, 238, 0.6);
             font-weight: 700;
-            font-size: 1.1rem;
             padding: 8px 18px;
+            border-radius: 10px;
             transition: all 0.3s ease;
+            background: transparent;
         }
 
         .btn-outline-cyan:hover {
-            background: rgba(34, 211, 238, 0.15);
+            background: rgba(34, 211, 238, 0.18);
             border-color: var(--primary-cyan);
-            color: var(--primary-cyan);
+            color: #ffffff;
         }
 
-        /* ---------- Área dos Gráficos (Canvas) ---------- */
+        .btn-topo {
+            background: #0f172a !important;
+            color: #38bdf8 !important;
+            border: 1.5px solid #0284c7 !important;
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 8px 20px;
+            transition: all 0.25s ease;
+        }
+
+        .btn-topo:hover {
+            background: #0369a1 !important;
+            color: #ffffff !important;
+            border-color: #38bdf8 !important;
+            transform: translateY(-1px);
+        }
+
+        .btn-topo.active {
+            background: linear-gradient(135deg, #0284c7, #2563eb) !important;
+            color: #ffffff !important;
+            border-color: #38bdf8 !important;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5) !important;
+        }
+
         .canvas-wrapper {
-            background: #030712;
+            background: #010409;
             border: 1.5px solid var(--card-border);
             border-radius: 14px;
             overflow-x: auto;
             padding: 18px;
             position: relative;
-            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.95);
         }
 
         canvas {
             display: block;
+            cursor: pointer;
         }
 
-        .canvas-wrapper::-webkit-scrollbar {
-            height: 10px;
-        }
-
-        .canvas-wrapper::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 8px;
-        }
-
-        /* ---------- Caixa de Divisão XOR (Estilo Terminal com Letra Grande) ---------- */
-        .xor-step {
-            background: #020617;
-            color: #34d399;
-            border: 1.5px solid #064e3b;
-            border-left: 5px solid #10b981;
+        .xor-step,
+        .rx-step {
+            background: #010409;
+            border: 1.5px solid #1e293b;
             border-radius: 10px;
             padding: 18px;
-            max-height: 280px;
+            max-height: 380px;
             overflow-y: auto;
-            font-size: 1.1rem;
-            line-height: 1.8;
-            box-shadow: inset 0 0 20px rgba(16, 185, 129, 0.08);
+            font-size: 1.02rem;
+            line-height: 1.75;
+            white-space: pre;
         }
 
-        /* ---------- Tabelas Estilizadas e Muito Legíveis ---------- */
+        .xor-step {
+            color: #34d399;
+            border-left: 5px solid #10b981;
+        }
+
+        .rx-step {
+            color: #38bdf8;
+            border-left: 5px solid #0284c7;
+        }
+
+        .rx-step.corrupted {
+            color: #fca5a5;
+            border-left: 5px solid #ef4444;
+            background: #0f0505;
+        }
+
+        .interactive-codeword {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 16px;
+            background: #030712;
+            border-radius: 12px;
+            border: 1.5px dashed var(--card-border);
+            justify-content: center;
+        }
+
+        .bit-box {
+            width: 52px;
+            height: 62px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            border: 2px solid;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            background: #0f172a;
+        }
+
+        .bit-box:hover {
+            transform: scale(1.12);
+            box-shadow: 0 0 16px rgba(34, 211, 238, 0.6);
+        }
+
+        .bit-box.msg-bit {
+            border-color: #38bdf8;
+            color: #e0f2fe;
+        }
+
+        .bit-box.crc-bit {
+            border-color: #f43f5e;
+            color: #ffe4e6;
+        }
+
+        .bit-box.has-error {
+            border-color: #ef4444 !important;
+            background: #7f1d1d !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 16px rgba(239, 68, 68, 0.85);
+            animation: pulseError 1.2s infinite alternate;
+        }
+
+        @keyframes pulseError {
+            from {
+                box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+            }
+
+            to {
+                box-shadow: 0 0 20px rgba(239, 68, 68, 1);
+            }
+        }
+
         .table-tech {
-            color: var(--text-main);
+            color: #f8fafc !important;
             --bs-table-bg: transparent;
             border-collapse: separate;
             border-spacing: 0 6px;
@@ -255,89 +367,85 @@
         }
 
         .table-tech thead th {
-            background: rgba(30, 41, 59, 0.95) !important;
-            color: var(--primary-cyan) !important;
-            font-weight: 700;
-            font-size: 1.15rem;
-            letter-spacing: 0.5px;
+            background: #1e293b !important;
+            color: #22d3ee !important;
+            font-weight: 800;
             padding: 14px 18px;
-            border: none;
+            border: 1px solid #334155;
         }
 
         .table-tech tbody tr {
-            background: rgba(15, 23, 42, 0.7);
-            transition: all 0.2s ease;
+            background: #0f172a;
         }
 
         .table-tech tbody tr:hover {
-            background: rgba(34, 211, 238, 0.12);
-            transform: scale(1.002);
+            background: rgba(34, 211, 238, 0.15);
         }
 
         .table-tech td {
-            border: none;
+            border: 1px solid #1e293b;
             padding: 14px 18px;
             vertical-align: middle;
+            color: #f8fafc;
         }
 
-        /* ---------- Estilos da Aula Teórica com Fórmulas Gigantes ---------- */
         .math-box {
-            background: rgba(2, 6, 23, 0.9);
+            background: #020617;
             border: 2px solid rgba(34, 211, 238, 0.4);
             border-left: 6px solid var(--primary-cyan);
             border-radius: 16px;
-            padding: 1.75rem;
-            box-shadow: 0 0 35px rgba(34, 211, 238, 0.15);
+            padding: 1.5rem;
         }
 
         .math-formula {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: #38bdf8;
-            letter-spacing: 1px;
         }
 
         .theory-badge {
             font-size: 0.95rem;
-            letter-spacing: 1.5px;
+            letter-spacing: 1.2px;
             text-transform: uppercase;
             font-weight: 800;
             padding: 6px 14px;
             border-radius: 8px;
         }
 
-        .card-theory-ask {
-            border: 2px solid rgba(251, 191, 36, 0.4);
-            background: linear-gradient(180deg, rgba(251, 191, 36, 0.1) 0%, rgba(15, 23, 42, 0.75) 100%);
+        .status-pill {
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 8px 20px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .card-theory-fsk {
-            border: 2px solid rgba(52, 211, 153, 0.4);
-            background: linear-gradient(180deg, rgba(52, 211, 153, 0.1) 0%, rgba(15, 23, 42, 0.75) 100%);
+        .rx-status-box {
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            transition: all 0.3s ease;
         }
 
-        .card-theory-psk {
-            border: 2px solid rgba(96, 165, 250, 0.4);
-            background: linear-gradient(180deg, rgba(96, 165, 250, 0.1) 0%, rgba(15, 23, 42, 0.75) 100%);
+        .rx-status-box.ok {
+            background: rgba(16, 185, 129, 0.15);
+            border: 2px solid #10b981;
         }
 
-        .xor-truth-table {
-            max-width: 440px;
-            margin: 0 auto;
-            border: 2px solid var(--card-border);
-            border-radius: 12px;
-            overflow: hidden;
-            font-size: 1.15rem;
+        .rx-status-box.err {
+            background: rgba(239, 68, 68, 0.18);
+            border: 2px solid #ef4444;
         }
 
-        /* Notificação (Toast) */
         .toast-custom {
             position: fixed;
             bottom: 30px;
             right: 30px;
             background: #10b981;
-            color: white;
-            font-size: 1.25rem;
+            color: #ffffff;
+            font-size: 1.2rem;
             padding: 16px 30px;
             border-radius: 12px;
             font-weight: 700;
@@ -354,26 +462,9 @@
         }
 
         @media (max-width: 768px) {
-            body {
-                font-size: 1.05rem;
-            }
-
-            .math-formula {
-                font-size: 1.4rem;
-            }
-
-            .brand-title {
-                font-size: 1.4rem;
-            }
-
             .nav-tech {
                 width: 100%;
                 flex-direction: column;
-            }
-
-            .nav-tech .nav-link {
-                text-align: center;
-                font-size: 1.1rem;
             }
         }
     </style>
@@ -381,42 +472,49 @@
 
 <body>
 
-    <!-- Barra de Topo -->
+    <!-- Topbar -->
     <nav class="navbar-tech py-3 mb-4">
         <div class="container-fluid px-lg-5 d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="d-flex align-items-center gap-3">
                 <div class="p-3 rounded-4"
-                    style="background: rgba(34, 211, 238, 0.15); border: 1.5px solid rgba(34, 211, 238, 0.3);">
+                    style="background: rgba(34, 211, 238, 0.18); border: 1.5px solid rgba(34, 211, 238, 0.4);">
                     <i class="bi bi-broadcast-pin text-info fs-1"></i>
                 </div>
                 <div>
-                    <h3 class="fw-bold mb-0 brand-title">TeleLab: CRC &amp; Modulações Digitais</h3>
-                    <div class="text-secondary fw-semibold fs-5">Simulador Universal &bull; Análise Visual de
-                        Telecomunicações</div>
+                    <h3 class="fw-bold mb-0 brand-title">TeleLab: Redes, CRC &amp; Modulações</h3>
+                    <div class="text-white-50 fw-semibold fs-5">Laboratório Visual de Engenharia &amp; Redes de
+                        Computadores</div>
                 </div>
             </div>
             <span class="badge rounded-pill fs-6 px-4 py-3"
                 style="background: rgba(34, 211, 238, 0.15); color: var(--primary-cyan); border: 1.5px solid rgba(34, 211, 238, 0.4);">
-                <i class="bi bi-cpu me-2"></i> Engenharia &amp; Redes de Computadores
+                <i class="bi bi-mortarboard-fill me-2"></i> Ensino Universitário Interativo
             </span>
         </div>
     </nav>
 
     <div class="container-fluid px-lg-5 pb-5">
 
-        <!-- Abas Principais -->
+        <!-- Abas -->
         <div class="mb-4">
             <ul class="nav nav-tech" id="mainTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active w-100" id="sim-tab" data-bs-toggle="tab" data-bs-target="#simulador"
+                    <button class="nav-link active" id="sim-tab" data-bs-toggle="tab" data-bs-target="#simulador"
                         type="button" role="tab">
-                        <i class="bi bi-sliders2 me-2"></i>Simulador &amp; Osciloscópio
+                        <i class="bi bi-sliders2 me-2"></i>1. Modulações, CRC &amp; Teste de Erro (Bit Flip)
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link w-100" id="aula-tab" data-bs-toggle="tab" data-bs-target="#aula"
-                        type="button" role="tab">
-                        <i class="bi bi-journal-code me-2"></i>Aula Teórica Completa
+                    <button class="nav-link" id="redes-tab" data-bs-toggle="tab" data-bs-target="#redes" type="button"
+                        role="tab">
+                        <i class="bi bi-diagram-3-fill me-2 text-warning"></i>2. Tipos de Redes, Topologias &amp;
+                        Defeitos em Cabos
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="aula-tab" data-bs-toggle="tab" data-bs-target="#aula" type="button"
+                        role="tab">
+                        <i class="bi bi-journal-code me-2"></i>3. Teoria Completa &amp; Comparativo Físico
                     </button>
                 </li>
             </ul>
@@ -424,43 +522,54 @@
 
         <div class="tab-content" id="mainTabsContent">
 
-            <!-- ========================================== -->
-            <!-- ABA 1: SIMULADOR                           -->
-            <!-- ========================================== -->
+            <!-- ========================================================================= -->
+            <!-- ABA 1: SIMULADOR DE MODULAÇÕES, CRC E CANAL INTERATIVO                    -->
+            <!-- ========================================================================= -->
             <div class="tab-pane fade show active" id="simulador" role="tabpanel">
 
-                <!-- Painel CRC Universal -->
-                <div class="card card-tech p-4 p-md-5 mb-4 delay-1">
+                <!-- Painel do Transmissor CRC -->
+                <div class="card card-tech p-4 p-md-5 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                         <div>
                             <h4 class="fw-bold mb-1 text-info fs-3">
-                                <i class="bi bi-cpu me-2"></i>Motor Polinomial CRC (Universal)
+                                <i class="bi bi-cpu me-2"></i>Transmissor (TX): Motor Polinomial CRC
                             </h4>
-                            <p class="text-secondary mb-0 fs-5">Insira livremente qualquer sequência de dados e qualquer
-                                divisor binário</p>
+                            <p class="text-white-50 mb-0 fs-5">Insira a mensagem e o divisor para visualizar as contas
+                                detalhadas passo a passo</p>
                         </div>
-                        <span
-                            class="badge bg-secondary bg-opacity-25 text-light border border-secondary px-3 py-2 fs-6">
+                        <span class="badge border border-info text-info bg-dark px-3 py-2 fs-6">
                             Aritmética Módulo 2 &middot; XOR
                         </span>
                     </div>
 
-                    <div class="row g-4">
+                    <!-- Explicação Teórica de Suporte no Painel TX -->
+                    <div class="academic-callout">
+                        <div class="text-info fw-bold fs-5 mb-1"><i class="bi bi-info-circle-fill me-2"></i>Fundamento
+                            Matemático da Camada de Enlace (FCS - Frame Check Sequence):</div>
+                        <p class="text-white mb-0 fs-5">
+                            O <strong>Cyclic Redundancy Check (CRC)</strong> baseia-se na teoria dos anéis de polinômios
+                            sobre o corpo finito $\mathbb{F}_2$. A mensagem de $k$ bits é tratada como um polinômio
+                            $M(x)$ de grau $k-1$. Ao multiplicá-la por $x^r$ (onde $r$ é o grau do gerador $G(x)$),
+                            criam-se $r$ posições binárias ao final. A divisão módulo 2 gera um resto $R(x)$ de
+                            exatamente $r$ bits. A palavra-código transmitida $T(x) = M(x) \cdot x^r \oplus R(x)$ é, por
+                            definição matemática, perfeitamente divisível por $G(x)$.
+                        </p>
+                    </div>
+
+                    <div class="row g-4 mt-2">
                         <div class="col-12 col-md-5">
                             <label class="form-label text-white fw-bold fs-5">Mensagem de Dados M(x):</label>
                             <input type="text" id="inputMensagem"
                                 class="form-control form-control-lg font-bits text-warning fw-bold fs-4"
                                 value="10110011" placeholder="Ex: 10110011">
-                            <div class="text-secondary mt-1 fw-medium">Sequência binária gerada pela fonte de dados
-                            </div>
+                            <div class="text-white-50 mt-1 fw-medium">Sequência binária gerada na fonte</div>
                         </div>
                         <div class="col-12 col-md-3">
                             <label class="form-label text-white fw-bold fs-5">Polinômio Divisor G(x):</label>
                             <input type="text" id="inputDivisor"
                                 class="form-control form-control-lg font-bits text-info fw-bold fs-4" value="1101"
                                 placeholder="Ex: 1101">
-                            <div class="text-secondary mt-1 fw-medium">Grau r = número de bits do divisor &minus; 1
-                            </div>
+                            <div class="text-white-50 mt-1 fw-medium">Grau r = bits do divisor &minus; 1</div>
                         </div>
                         <div class="col-12 col-md-4 d-flex align-items-end">
                             <button class="btn btn-tech w-100 py-3" id="btnCalcularCRC">
@@ -469,20 +578,22 @@
                         </div>
                     </div>
 
-                    <!-- Resultados do CRC em Destaque Visual -->
-                    <div class="row g-4 mt-3">
+                    <!-- Divisor Visual Neon -->
+                    <div class="tech-divider"></div>
+
+                    <!-- Resultados do Transmissor -->
+                    <div class="row g-4 mt-1">
                         <div class="col-12 col-lg-5">
                             <div class="p-4 rounded-4"
-                                style="background: rgba(0,0,0,0.5); border: 2px solid var(--card-border);">
+                                style="background: #030712; border: 2px solid var(--card-border);">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <span class="text-white fs-5 fw-bold">RESTO DO CRC:</span>
                                     <span class="badge bg-danger fs-6 px-3 py-2" id="badgeCrcLength">3 bits</span>
                                 </div>
                                 <div class="fw-bold text-danger font-bits mb-3"
-                                    style="font-size: 2.8rem; line-height: 1.1;" id="txtCrcOutput">000</div>
+                                    style="font-size: 2.8rem; line-height: 1.1;" id="txtCrcOutput">100</div>
 
-                                <span class="text-white fs-6 fw-bold d-block mb-2">PALAVRA-CÓDIGO (MENSAGEM +
-                                    CRC):</span>
+                                <span class="text-white fs-6 fw-bold d-block mb-2">PALAVRA-CÓDIGO TRANSMITIDA:</span>
                                 <div class="input-group">
                                     <input type="text" id="txtChaveCompleta"
                                         class="form-control font-bits text-success fw-bold fs-4" readonly value="">
@@ -496,56 +607,134 @@
 
                         <div class="col-12 col-lg-7">
                             <div class="d-flex justify-content-between align-items-end mb-2">
-                                <label class="text-white fs-5 fw-bold mb-0">LOG DA DIVISÃO POLINOMIAL XOR (PASSO A
-                                    PASSO)</label>
+                                <label class="text-white fs-5 fw-bold mb-0">LOG DAS CONTAS COMPLETAS DO CRC (PASSO A
+                                    PASSO EXPLICADO)</label>
                                 <span class="badge bg-dark border border-secondary text-info font-bits fs-6 px-3 py-2"
-                                    id="txtQuociente">Q = 0</span>
+                                    id="txtQuociente">Q = 11001100</span>
                             </div>
                             <div class="xor-step" id="boxPassosXor"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Painel de Transmissão Direta e Osciloscópio -->
-                <div class="card card-tech p-4 p-md-5 mb-4 delay-2">
+                <!-- Painel de Injeção de Erros no Canal e Receptor RX -->
+                <div class="card card-tech p-4 p-md-5 mb-4" style="border: 2px solid rgba(251, 191, 36, 0.4);">
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <div>
+                            <span class="theory-badge bg-warning bg-opacity-25 text-warning border border-warning fs-6">
+                                Meio Físico Interativo
+                            </span>
+                            <h4 class="fw-bold text-white mb-0 mt-2 fs-3">
+                                <i class="bi bi-hand-index-thumb me-2 text-warning"></i>Injeção de Erros no Canal:
+                                Clique nos Bits para Inverter!
+                            </h4>
+                        </div>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button class="btn btn-outline-success fw-bold py-2 px-3 text-white"
+                                id="btnRestaurarNormal">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> Modo Normal (Sem Erro)
+                            </button>
+                            <button class="btn btn-outline-danger fw-bold py-2 px-3 text-white" id="btnInjetarErro1">
+                                <i class="bi bi-lightning-charge me-1"></i> Inverter 1 Bit
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="academic-callout-warning">
+                        <div class="text-warning fw-bold fs-5 mb-1"><i
+                                class="bi bi-shield-slash-fill me-2"></i>Capacidade de Detecção de Falhas:</div>
+                        <p class="text-white mb-0 fs-5">
+                            O CRC detecta <strong>100% de erros isolados de 1 bit</strong>, <strong>100% de erros
+                                duplos</strong> (desde que o gerador contenha certos fatores) e <strong>100% de erros em
+                                rajada (burst)</strong> com comprimento menor ou igual ao grau $r$ do polinômio. Quando
+                            um bit é invertido pelo ruído do canal analógico, o resto obtido no receptor deixa de ser
+                            zero, acionando o descarte imediato do quadro.
+                        </p>
+                    </div>
+
+                    <p class="text-white fs-5 mb-3">
+                        Abaixo está a palavra-código transmitida pelo canal. <strong>Clique em qualquer bit</strong>
+                        para simular uma interferência e observe imediatamente o comportamento do Receptor (RX)
+                        refazendo a divisão XOR:
+                    </p>
+
+                    <!-- Grade interativa de bits -->
+                    <div class="interactive-codeword mb-4" id="codewordDisplay"></div>
+
+                    <!-- Divisor Visual Estilizado -->
+                    <div class="tech-divider-warning"></div>
+
+                    <!-- Verificação do Receptor RX -->
+                    <div class="row g-4">
+                        <div class="col-12 col-lg-5">
+                            <div class="rx-status-box ok" id="rxStatusBox">
+                                <div class="mb-2" id="rxStatusIcon">
+                                    <i class="bi bi-check-circle-fill fs-1 text-success"></i>
+                                </div>
+                                <div class="fw-bold fs-3 mb-2 text-success" id="rxStatusTitle">QUADRO APROVADO</div>
+                                <div class="text-white fs-5" id="rxStatusDesc">Resto da verificação = 000</div>
+                                <hr style="border-color: rgba(255,255,255,0.2);">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-white fw-bold fs-6">RESTO NO RECEPTOR:</span>
+                                    <span class="fw-bold font-bits text-warning fs-3" id="rxRemainder">000</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <span class="text-white fw-bold fs-6">BITS INVERTIDOS:</span>
+                                    <span class="fw-bold font-bits text-white fs-4" id="rxErrorCount">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-7">
+                            <div class="d-flex justify-content-between align-items-end mb-2">
+                                <label class="text-white fs-5 fw-bold mb-0">LOG DAS CONTAS DO RECEPTOR (RX -
+                                    VERIFICAÇÃO)</label>
+                                <span class="badge bg-dark border border-info text-info font-bits fs-6 px-3 py-2"
+                                    id="txtRxQuociente">Q = 0</span>
+                            </div>
+                            <div class="rx-step" id="boxRxPassosXor"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Painel de Modulação e Osciloscópio -->
+                <div class="card card-tech p-4 p-md-5 mb-4">
                     <div class="row g-4 align-items-center">
                         <div class="col-12 col-lg-6">
                             <label class="form-label text-info fw-bold fs-4 mb-2">
-                                <i class="bi bi-keyboard me-2"></i> Chave de Bits Ativa (Edição Livre em Tempo Real)
+                                <i class="bi bi-keyboard me-2"></i> Chave de Bits Transmitida (Edição Livre)
                             </label>
                             <div class="input-group">
                                 <input type="text" id="inputModulacaoManual"
                                     class="form-control form-control-lg font-bits text-white fw-bold fs-3" value="">
-                                <button class="btn btn-outline-danger px-4" id="btnLimpar" title="Limpar campo">
+                                <button class="btn btn-outline-danger px-4" id="btnLimpar" title="Limpar">
                                     <i class="bi bi-eraser fs-4"></i>
                                 </button>
                             </div>
                             <div class="d-flex gap-3 mt-3 flex-wrap">
                                 <button class="btn btn-outline-cyan py-2 px-3" id="btnAleatorio8">
-                                    <i class="bi bi-shuffle me-1"></i> 8 Bits Aleatórios
+                                    <i class="bi bi-shuffle me-1"></i> 8 Bits
                                 </button>
                                 <button class="btn btn-outline-cyan py-2 px-3" id="btnAleatorio16">
                                     <i class="bi bi-shuffle me-1"></i> 16 Bits
                                 </button>
                                 <button class="btn btn-outline-secondary py-2 px-3 text-white" id="btnInverter">
-                                    <i class="bi bi-arrow-left-right me-1"></i> Inverter Bits (NOT)
+                                    <i class="bi bi-arrow-left-right me-1"></i> Inverter (NOT)
                                 </button>
                             </div>
                         </div>
 
                         <div class="col-12 col-lg-6 border-start-lg border-secondary ps-lg-5">
                             <label class="form-label text-info fw-bold fs-4 mb-3">
-                                <i class="bi bi-aspect-ratio me-2"></i> Ajustes Visuais do Osciloscópio
+                                <i class="bi bi-aspect-ratio me-2"></i> Ajustes Visuais das Ondas
                             </label>
                             <div class="row g-4">
                                 <div class="col-6">
-                                    <label class="form-label text-white fw-bold fs-5 mb-2">Largura do Bit (Zoom
-                                        X):</label>
+                                    <label class="form-label text-white fw-bold fs-5 mb-2">Zoom X (Largura Bit):</label>
                                     <input type="range" class="form-range" id="rangeZoom" min="45" max="150" value="80">
                                 </div>
                                 <div class="col-6">
-                                    <label class="form-label text-white fw-bold fs-5 mb-2">Ciclos por Bit
-                                        (Portadora):</label>
+                                    <label class="form-label text-white fw-bold fs-5 mb-2">Ciclos por Bit:</label>
                                     <input type="range" class="form-range" id="rangeCiclos" min="1" max="4" value="2">
                                 </div>
                             </div>
@@ -553,82 +742,55 @@
                     </div>
                 </div>
 
-                <!-- Gráficos das Ondas -->
+                <!-- Gráficos das 4 Modulações Digitais -->
                 <div class="row g-4">
-
-                    <!-- Banda Base -->
-                    <div class="col-12 delay-3">
+                    <div class="col-12">
                         <div class="card card-tech p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                                <h5 class="fw-bold mb-0 fs-4" style="color: var(--base-color);">
-                                    <i class="bi bi-bar-chart-steps me-2"></i>1. Trem de Pulsos em Banda Base (Digital
-                                    NRZ-L)
-                                </h5>
-                                <span class="badge bg-dark border border-secondary text-light fs-6 px-3 py-2">
-                                    Nível 1 = Tensão Alta (+V) &bull; Nível 0 = Tensão Baixa (0V)
-                                </span>
-                            </div>
+                            <h5 class="fw-bold mb-3 fs-4" style="color: var(--base-color);">
+                                <i class="bi bi-bar-chart-steps me-2"></i>1. Banda Base (Digital NRZ-L)
+                            </h5>
                             <div class="canvas-wrapper">
                                 <canvas id="canvasBase" height="110"></canvas>
                             </div>
                         </div>
                     </div>
 
-                    <!-- ASK -->
-                    <div class="col-12 delay-3">
+                    <div class="col-12">
                         <div class="card card-tech p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                                <h5 class="fw-bold mb-0 fs-4" style="color: var(--ask-color);">
-                                    <i class="bi bi-activity me-2"></i>2. ASK (Amplitude Shift Keying &middot; OOK)
-                                </h5>
-                                <span class="badge bg-warning text-dark fs-6 px-3 py-2 fw-bold">
-                                    Bit 1: Portadora Presente (A = 1) &bull; Bit 0: Amplitude Zero (A = 0)
-                                </span>
-                            </div>
+                            <h5 class="fw-bold mb-3 fs-4" style="color: var(--ask-color);">
+                                <i class="bi bi-activity me-2"></i>2. ASK (Amplitude Shift Keying &middot; OOK)
+                            </h5>
                             <div class="canvas-wrapper">
                                 <canvas id="canvasASK" height="140"></canvas>
                             </div>
                         </div>
                     </div>
 
-                    <!-- FSK -->
-                    <div class="col-12 delay-4">
+                    <div class="col-12">
                         <div class="card card-tech p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                                <h5 class="fw-bold mb-0 fs-4" style="color: var(--fsk-color);">
-                                    <i class="bi bi-soundwave me-2"></i>3. FSK (Frequency Shift Keying)
-                                </h5>
-                                <span class="badge bg-success text-white fs-6 px-3 py-2 fw-bold">
-                                    Bit 1: Frequência Alta (f₁) &bull; Bit 0: Frequência Baixa (f₀)
-                                </span>
-                            </div>
+                            <h5 class="fw-bold mb-3 fs-4" style="color: var(--fsk-color);">
+                                <i class="bi bi-soundwave me-2"></i>3. FSK (Frequency Shift Keying)
+                            </h5>
                             <div class="canvas-wrapper">
                                 <canvas id="canvasFSK" height="140"></canvas>
                             </div>
                         </div>
                     </div>
 
-                    <!-- PSK -->
-                    <div class="col-12 delay-4">
+                    <div class="col-12">
                         <div class="card card-tech p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                                <h5 class="fw-bold mb-0 fs-4" style="color: var(--psk-color);">
-                                    <i class="bi bi-water me-2"></i>4. PSK / BPSK (Phase Shift Keying)
-                                </h5>
-                                <span class="badge bg-info text-dark fs-6 px-3 py-2 fw-bold">
-                                    Bit 1: Fase 0&deg; &bull; Bit 0: Fase Invertida 180&deg; (&pi; radianos)
-                                </span>
-                            </div>
+                            <h5 class="fw-bold mb-3 fs-4" style="color: var(--psk-color);">
+                                <i class="bi bi-water me-2"></i>4. PSK / BPSK (Phase Shift Keying)
+                            </h5>
                             <div class="canvas-wrapper">
                                 <canvas id="canvasPSK" height="140"></canvas>
                             </div>
                         </div>
                     </div>
-
                 </div>
 
-                <!-- Tabela Dinâmica com Alta Visibilidade -->
-                <div class="card card-tech p-4 p-md-5 mt-4 delay-4">
+                <!-- Tabela de Estados Bit a Bit -->
+                <div class="card card-tech p-4 p-md-5 mt-4">
                     <h4 class="fw-bold text-white mb-4 fs-3">
                         <i class="bi bi-table me-2 text-info"></i>Tabela de Estados Físicos de Cada Bit Transmitido
                     </h4>
@@ -637,7 +799,7 @@
                             <thead>
                                 <tr>
                                     <th># Posição</th>
-                                    <th>Origem do Bit</th>
+                                    <th>Origem</th>
                                     <th>Valor Lógico</th>
                                     <th>Modulação ASK (Amplitude)</th>
                                     <th>Modulação FSK (Frequência)</th>
@@ -651,285 +813,595 @@
 
             </div>
 
-            <!-- ========================================== -->
-            <!-- ABA 2: AULA TEÓRICA COMPLETA               -->
-            <!-- ========================================== -->
-            <div class="tab-pane fade" id="aula" role="tabpanel">
+            <!-- ========================================================================= -->
+            <!-- ABA 2: TIPOS DE REDES, TOPOLOGIAS INTERATIVAS (COM CLIQUE PARA QUEBRAR)  -->
+            <!-- ========================================================================= -->
+            <div class="tab-pane fade" id="redes" role="tabpanel">
 
-                <!-- 1. Introdução à Modulação Digital -->
-                <div class="card card-tech p-4 p-md-5 mb-4 delay-1">
+                <!-- 1. Todos os Tipos de Redes -->
+                <div class="card card-tech p-4 p-md-5 mb-4">
                     <div class="d-flex align-items-center gap-3 mb-3">
                         <span
-                            class="theory-badge bg-info bg-opacity-25 text-info border border-info border-opacity-50 fs-6">Fundamento
+                            class="theory-badge bg-info bg-opacity-25 text-info border border-info fs-6">Arquitetura</span>
+                        <h2 class="fw-bold text-info mb-0 fs-2">Classificação Geográfica: Todos os Tipos de Redes</h2>
+                    </div>
+                    <p class="text-white fs-4 leading-relaxed">
+                        A escala geográfica define a latência, a largura de banda e os protocolos físicos adotados na
+                        infraestrutura:
+                    </p>
+
+                    <div class="row g-4 mt-2">
+                        <div class="col-12 col-md-6 col-xl-4">
+                            <div class="p-4 rounded-4 h-100"
+                                style="background: #030712; border: 2px solid var(--card-border);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-primary fs-6 px-3 py-2">PAN</span>
+                                    <span class="text-white-50 fs-6">Até ~10 metros</span>
+                                </div>
+                                <h4 class="text-white fw-bold mb-2">Personal Area Network</h4>
+                                <p class="text-white-50 fs-5 mb-3">Rede centrada em um único usuário e seus dispositivos
+                                    imediatos.</p>
+                                <div class="text-info fs-6"><strong>Exemplos:</strong> Bluetooth, fones TWS,
+                                    smartwatches, NFC e conexões USB diretas.</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-xl-4">
+                            <div class="p-4 rounded-4 h-100"
+                                style="background: #030712; border: 2px solid rgba(34, 211, 238, 0.4);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-info text-dark fs-6 px-3 py-2 fw-bold">LAN</span>
+                                    <span class="text-white-50 fs-6">100m a 1 km</span>
+                                </div>
+                                <h4 class="text-white fw-bold mb-2">Local Area Network</h4>
+                                <p class="text-white-50 fs-5 mb-3">Rede de alta taxa em ambiente fechado (residência,
+                                    escola, escritório).</p>
+                                <div class="text-info fs-6"><strong>Exemplos:</strong> Cabos Ethernet Cat6/Cat6A
+                                    conectados a Switches Gigabit Full-Duplex.</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-xl-4">
+                            <div class="p-4 rounded-4 h-100"
+                                style="background: #030712; border: 2px solid rgba(251, 146, 60, 0.4);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-warning text-dark fs-6 px-3 py-2 fw-bold">WLAN</span>
+                                    <span class="text-white-50 fs-6">30m a 100m</span>
+                                </div>
+                                <h4 class="text-white fw-bold mb-2">Wireless LAN</h4>
+                                <p class="text-white-50 fs-5 mb-3">Extensão sem fio da LAN por radiofrequência em meio
+                                    compartilhado (ar).</p>
+                                <div class="text-warning fs-6"><strong>Exemplos:</strong> Roteadores Wi-Fi domésticos e
+                                    APs corporativos (IEEE 802.11).</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-xl-4">
+                            <div class="p-4 rounded-4 h-100"
+                                style="background: #030712; border: 2px solid var(--card-border);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-success fs-6 px-3 py-2">CAN</span>
+                                    <span class="text-white-50 fs-6">1 km a 5 km</span>
+                                </div>
+                                <h4 class="text-white fw-bold mb-2">Campus Area Network</h4>
+                                <p class="text-white-50 fs-5 mb-3">Interliga prédios de uma mesma instituição em área
+                                    privativa.</p>
+                                <div class="text-success fs-6"><strong>Exemplos:</strong> Campus universitário,
+                                    hospitais ou complexos fabris interligados por fibra.</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-xl-4">
+                            <div class="p-4 rounded-4 h-100"
+                                style="background: #030712; border: 2px solid var(--card-border);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge fs-6 px-3 py-2" style="background-color: #a855f7;">MAN</span>
+                                    <span class="text-white-50 fs-6">10 km a 50 km</span>
+                                </div>
+                                <h4 class="text-white fw-bold mb-2">Metropolitan Area Network</h4>
+                                <p class="text-white-50 fs-5 mb-3">Rede metropolitana que cobre os limites de uma cidade
+                                    inteira.</p>
+                                <div class="text-white-50 fs-6"><strong>Exemplos:</strong> Anéis ópticos municipais de
+                                    prefeituras e redes de TV a cabo (Metro-Ethernet).</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-xl-4">
+                            <div class="p-4 rounded-4 h-100"
+                                style="background: #030712; border: 2px solid rgba(248, 113, 113, 0.4);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-danger fs-6 px-3 py-2">WAN</span>
+                                    <span class="text-white-50 fs-6">Global</span>
+                                </div>
+                                <h4 class="text-white fw-bold mb-2">Wide Area Network</h4>
+                                <p class="text-white-50 fs-5 mb-3">Rede de longa distância entre cidades, países ou
+                                    continentes.</p>
+                                <div class="text-danger fs-6"><strong>Exemplos:</strong> A <strong>INTERNET</strong>
+                                    global, cabos submarinos e constelações de satélites.</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="p-4 rounded-4"
+                                style="background: #030712; border: 2px solid var(--card-border);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-light text-dark fs-6 px-3 py-2 fw-bold">SAN (Storage Area
+                                        Network)</span>
+                                    <span class="text-white-50 fs-6">Datacenters</span>
+                                </div>
+                                <h4 class="text-white fw-bold mb-2">Rede de Armazenamento Dedicada</h4>
+                                <p class="text-white fs-5 mb-0">Infraestrutura separada da rede corporativa comum,
+                                    voltada à transferência em bloco de dados entre servidores e sistemas de storage
+                                    (Fiber Channel / iSCSI) com perda zero e latência quase nula.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Divisor Neon entre Redes e Topologias -->
+                <div class="tech-divider"></div>
+
+                <!-- 2. TOPOLOGIAS INTERATIVAS (COM CLIQUE PARA QUEBRAR NÓS / ENLACES) -->
+                <div class="card card-tech p-4 p-md-5 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <div>
+                            <span
+                                class="theory-badge bg-warning bg-opacity-25 text-warning border border-warning fs-6">Geometria
+                                Física</span>
+                            <h3 class="fw-bold text-white mb-0 mt-2 fs-2">
+                                <i class="bi bi-diagram-2 me-2 text-warning"></i>Simulador Animado de Topologias
+                                (Interativo)
+                            </h3>
+                        </div>
+                        <div class="d-flex gap-2 flex-wrap align-items-center">
+                            <div class="btn-group flex-wrap" role="group">
+                                <button type="button" class="btn btn-topo active" data-topo="estrela">Estrela</button>
+                                <button type="button" class="btn btn-topo" data-topo="barramento">Barramento</button>
+                                <button type="button" class="btn btn-topo" data-topo="anel">Anel</button>
+                                <button type="button" class="btn btn-topo" data-topo="malha">Malha</button>
+                                <button type="button" class="btn btn-topo" data-topo="p2p">Ponto-a-Ponto</button>
+                            </div>
+                            <button class="btn btn-outline-cyan fw-bold py-2 px-3" id="btnRestaurarTopologia">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> Restaurar Todos os Nós
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-3 rounded-3 mb-3"
+                        style="background: rgba(34, 211, 238, 0.08); border-left: 5px solid var(--primary-cyan);">
+                        <div class="text-info fw-bold fs-5 mb-1"><i class="bi bi-hand-index me-2"></i>Dica Interativa:
+                        </div>
+                        <p class="text-white mb-0 fs-5" id="descTopologia"></p>
+                    </div>
+
+                    <div class="canvas-wrapper">
+                        <canvas id="canvasTopologias" height="320" style="width: 100%;"></canvas>
+                    </div>
+
+                    <div class="mt-3 text-center" id="statusTopologiaInterativa">
+                        <span class="status-pill bg-dark text-info border border-info">
+                            <i class="bi bi-info-circle"></i> Todos os nós e enlaces estão operacionais. Clique em um
+                            computador ou roteador no gráfico acima para desligá-lo!
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Divisor Neon entre Topologias e Defeitos -->
+                <div class="tech-divider-warning"></div>
+
+                <!-- 3. SIMULADOR INTERATIVO DE DEFEITOS EM ESTRUTURA DE CABOS -->
+                <div class="card card-tech p-4 p-md-5 mb-4" style="border: 2px solid rgba(239, 68, 68, 0.4);">
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <div>
+                            <span class="theory-badge bg-danger bg-opacity-25 text-danger border border-danger fs-6">
+                                Camada Física &middot; Infraestrutura
+                            </span>
+                            <h3 class="fw-bold text-white mb-0 mt-2 fs-2">
+                                <i class="bi bi-tools me-2 text-danger"></i>Laboratório de Defeitos Físicos em
+                                Cabeamento
+                            </h3>
+                        </div>
+                        <div class="btn-group flex-wrap" role="group">
+                            <button type="button" class="btn btn-outline-cyan active btn-cabo-mode" data-mode="normal">
+                                <i class="bi bi-check-circle me-1"></i> Cabo Normal (100%)
+                            </button>
+                            <button type="button" class="btn btn-outline-danger btn-cabo-mode" data-mode="rompido">
+                                <i class="bi bi-scissors me-1"></i> Cabo Rompido (Corte)
+                            </button>
+                            <button type="button" class="btn btn-outline-warning btn-cabo-mode" data-mode="emi">
+                                <i class="bi bi-lightning-charge me-1"></i> Ruído EMI / Crosstalk
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary text-white btn-cabo-mode"
+                                data-mode="distancia">
+                                <i class="bi bi-rulers me-1"></i> Distância Excessiva (>100m)
+                            </button>
+                            <button type="button" class="btn btn-outline-danger btn-cabo-mode" data-mode="colisao">
+                                <i class="bi bi-x-octagon me-1"></i> Colisão CSMA/CD (Hub)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-3 rounded-3 mb-3" style="background: #030712; border: 1.5px solid #1e293b;">
+                        <div class="fw-bold text-info fs-5 mb-1" id="tituloDefeitoCabo">Condição Atual: Cabo Íntegro
+                            (Cat 6 Full-Duplex)</div>
+                        <p class="text-white mb-0 fs-5" id="descDefeitoCabo">
+                            O cabo de par trançado possui pares dedicados para transmissão (TX) e recepção (RX). Os
+                            pacotes trafegam em velocidade máxima com latência sub-milissegundo e perda zero.
+                        </p>
+                    </div>
+
+                    <div class="canvas-wrapper">
+                        <canvas id="canvasDefeitoCabo" height="230" style="width: 100%;"></canvas>
+                    </div>
+
+                    <div class="mt-3 text-center" id="statusDefeitoCabo">
+                        <span class="status-pill bg-dark text-success border border-success">
+                            <i class="bi bi-check-circle-fill"></i> Link Ativo: 1000 Mbps Full-Duplex &bull; 0% de Perda
+                            de Pacotes &bull; CRC OK
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Divisor Neon entre Defeitos e Corrida -->
+                <div class="tech-divider-success"></div>
+
+                <!-- 4. CORRIDA ANIMADA: CABO VS WI-FI -->
+                <div class="card card-tech p-4 p-md-5 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <div>
+                            <span class="theory-badge bg-warning bg-opacity-25 text-warning border border-warning fs-6">
+                                Benchmark Visual em Tempo Real
+                            </span>
+                            <h3 class="fw-bold text-white mb-0 mt-2 fs-2">
+                                <i class="bi bi-speedometer2 me-2 text-warning"></i>Por Que o Cabo é Mais Rápido? A
+                                Corrida "Full-Duplex vs Fila Wi-Fi"
+                            </h3>
+                        </div>
+                        <button class="btn btn-tech px-4 py-2" id="btnDispararCorrida">
+                            <i class="bi bi-play-fill me-1"></i> Disparar Rajada Concorrente de Dados
+                        </button>
+                    </div>
+
+                    <div class="row g-4 mb-3">
+                        <div class="col-12 col-lg-6">
+                            <div class="p-4 rounded-4 h-100"
+                                style="background: rgba(16, 185, 129, 0.08); border: 2px solid var(--cable-green);">
+                                <h4 class="fw-bold text-success mb-2"><i class="bi bi-ethernet me-2"></i>Cabo (Pista
+                                    Dupla Exclusiva)</h4>
+                                <ul class="text-white fs-5 leading-relaxed ps-3 mb-0">
+                                    <li><strong>Full-Duplex Real:</strong> Fios elétricos separados para TX e RX. Envia
+                                        e recebe ao mesmo tempo sem parar.</li>
+                                    <li><strong>Sem Contenção:</strong> Cada porta do Switch é um domínio isolado. Não
+                                        existe fila de disputa pelo meio físico.</li>
+                                    <li><strong>Rendimento Efetivo:</strong> Entrega <strong>~95% a 98%</strong> da taxa
+                                        nominal contratada de forma ininterrupta.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6">
+                            <div class="p-4 rounded-4 h-100"
+                                style="background: rgba(251, 146, 60, 0.08); border: 2px solid var(--wifi-orange);">
+                                <h4 class="fw-bold text-warning mb-2"><i class="bi bi-wifi me-2"></i>Wi-Fi (Pista Única
+                                    com Semáforo / Fila)</h4>
+                                <ul class="text-white fs-5 leading-relaxed ps-3 mb-0">
+                                    <li><strong>Half-Duplex Obrigatório:</strong> O ar é compartilhado. Apenas 1
+                                        aparelho fala por canal por vez.</li>
+                                    <li><strong>Fila de Espera (Backoff):</strong> Antes de falar, os dispositivos
+                                        sorteiam um timer e congelam em fila de espera.</li>
+                                    <li><strong>Perda Brutal de Throughput:</strong> De <strong>40% a 60%</strong> da
+                                        banda é gasta com cabeçalhos de controle e ACKs.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="canvas-wrapper">
+                        <canvas id="canvasCorrida" height="260" style="width: 100%;"></canvas>
+                    </div>
+
+                    <div class="mt-3 text-center" id="statusCorrida">
+                        <span class="status-pill bg-dark text-info border border-info">
+                            <i class="bi bi-info-circle"></i> Clique em "Disparar Rajada Concorrente" para comparar o
+                            tráfego nos dois meios.
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Tabela de Velocidades das Gerações -->
+                <div class="card card-tech p-4 p-md-5 mb-4">
+                    <h4 class="fw-bold text-info mb-3 fs-3"><i class="bi bi-table me-2"></i>Tabela Comparativa de
+                        Velocidades e Rendimentos</h4>
+                    <div class="table-responsive">
+                        <table class="table table-tech text-center align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Tecnologia / Padrão</th>
+                                    <th>Meio Físico</th>
+                                    <th>Velocidade Nominal</th>
+                                    <th>Throughput Real Típico</th>
+                                    <th>Latência Média</th>
+                                    <th>Impacto de Múltiplos Aparelhos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong class="text-success">Cabo Cat 5e</strong></td>
+                                    <td>Cobre (Par Trançado)</td>
+                                    <td>1.000 Mbps (1 Gbps)</td>
+                                    <td>~950 Mbps (Estável)</td>
+                                    <td>&lt; 0.5 ms</td>
+                                    <td><span class="badge bg-success">Nenhum (Portas dedicadas)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-success">Cabo Cat 6 / 6A</strong></td>
+                                    <td>Cobre Blindado</td>
+                                    <td>10.000 Mbps (10 Gbps)</td>
+                                    <td>~9.800 Mbps</td>
+                                    <td>&lt; 0.2 ms</td>
+                                    <td><span class="badge bg-success">Nenhum (Full-Duplex)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-success">Fibra Óptica Monomodo</strong></td>
+                                    <td>Laser (Vidro Sílica)</td>
+                                    <td>40 a 400 Gbps+</td>
+                                    <td>~99% da taxa nominal</td>
+                                    <td>&lt; 0.1 ms</td>
+                                    <td><span class="badge bg-success">Imune a ruídos EMI</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-warning">Wi-Fi 4 (802.11n)</strong></td>
+                                    <td>Ar (2.4 / 5 GHz)</td>
+                                    <td>150 a 600 Mbps</td>
+                                    <td>~50 a 140 Mbps</td>
+                                    <td>10 a 60 ms</td>
+                                    <td><span class="badge bg-danger">Degradação acentuada (Fila)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-warning">Wi-Fi 5 (802.11ac)</strong></td>
+                                    <td>Ar (5 GHz)</td>
+                                    <td>1.300 a 3.500 Mbps</td>
+                                    <td>~350 a 550 Mbps</td>
+                                    <td>8 a 30 ms</td>
+                                    <td><span class="badge bg-warning text-dark fw-bold">Queda com paredes e
+                                            clientes</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-warning">Wi-Fi 6 / 6E (802.11ax)</strong></td>
+                                    <td>Ar (2.4 / 5 / 6 GHz)</td>
+                                    <td>Até 9.600 Mbps</td>
+                                    <td>~800 a 1.400 Mbps</td>
+                                    <td>4 a 15 ms</td>
+                                    <td><span class="badge bg-info text-dark fw-bold">Divisão por subportadoras
+                                            (OFDMA)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-warning">Wi-Fi 7 (802.11be)</strong></td>
+                                    <td>Ar (Canais 320 MHz)</td>
+                                    <td>Até 46.000 Mbps</td>
+                                    <td>~2.500 a 5.000 Mbps</td>
+                                    <td>2 a 8 ms</td>
+                                    <td><span class="badge bg-info text-dark fw-bold">Multi-Link Operation (MLO)</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- ABA 3: AULA TEÓRICA COMPLETA & COMPARATIVO FÍSICO                         -->
+            <!-- ========================================================================= -->
+            <div class="tab-pane fade" id="aula" role="tabpanel">
+
+                <div class="card card-tech p-4 p-md-5 mb-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <span class="theory-badge bg-info bg-opacity-25 text-info border border-info fs-6">Fundamento
                             I</span>
                         <h2 class="fw-bold text-info mb-0 fs-2">O Que É Modulação Digital e Para Que Serve?</h2>
                     </div>
 
                     <p class="text-white fs-4 leading-relaxed mt-3">
-                        No interior de computadores e processadores, a informação trafega na forma de sinais digitais
-                        discretos (bits <code>0</code> e <code>1</code> em corrente contínua). No entanto, o meio físico
-                        de transmissão — como a atmosfera (antenas de rádio), cabos coaxiais ou fibra óptica — é um
-                        ambiente essencialmente <strong class="text-info">analógico</strong> governado pelas leis do
-                        eletromagnetismo.
+                        Processadores manipulam dados em sinais digitais discretos (bits <code>0</code> e <code>1</code>
+                        em corrente contínua). Contudo, o espaço físico livre (ondas de rádio) ou linhas de transmissão
+                        com características reativas requerem sinais analógicos oscilatórios de alta frequência para
+                        transporte eficiente.
                     </p>
 
                     <div class="p-4 my-4 rounded-4"
                         style="background: rgba(34, 211, 238, 0.1); border-left: 6px solid var(--primary-cyan);">
                         <div class="text-white fs-3 fw-bold mb-2">Definição Oficial de Telecomunicações:</div>
                         <p class="text-white fs-4 mb-0 leading-relaxed">
-                            <strong>Modulação</strong> é o processo físico no qual uma ou mais características de uma
-                            onda analógica contínua de alta frequência (a chamada <strong class="text-info">onda
-                                portadora</strong>) são alteradas em função do sinal digital que se deseja transmitir
-                            pelo canal.
+                            <strong>Modulação</strong> é o processo físico no qual parâmetros de amplitude, frequência
+                            ou ângulo de fase de uma onda senoidal analógica contínua (a <strong>onda
+                                portadora</strong>) são alterados para carregar a informação binária original.
                         </p>
                     </div>
 
-                    <h4 class="fw-bold text-white mt-5 mb-3 fs-3">A Equação Fundamental da Onda Portadora Senoidal:</h4>
+                    <h4 class="fw-bold text-white mt-5 mb-3 fs-3">A Equação Fundamental da Onda Portadora:</h4>
                     <div class="math-box text-center my-4">
-                        <div class="math-formula">
-                            s(t) = A(t) &middot; sen( 2&pi; &middot; f(t) &middot; t + &phi;(t) )
+                        <div class="math-formula">s(t) = A(t) &middot; sen( 2&pi; &middot; f(t) &middot; t + &phi;(t) )
                         </div>
                     </div>
 
-                    <p class="text-white fs-4 mt-4 mb-3">
-                        Manipulando separadamente cada variável dessa equação, derivam-se as três grandes famílias de
-                        modulação digital:
-                    </p>
                     <ul class="text-white fs-4 mb-0 ps-4 leading-relaxed">
-                        <li class="mb-3">Variando a amplitude <strong class="text-warning">A(t)</strong> &rarr; <strong
+                        <li class="mb-3">Variação na amplitude <strong class="text-warning">A(t)</strong> &rarr; <strong
                                 class="text-warning">ASK</strong> (<em>Amplitude Shift Keying</em>).</li>
-                        <li class="mb-3">Variando a frequência <strong class="text-success">f(t)</strong> &rarr; <strong
-                                class="text-success">FSK</strong> (<em>Frequency Shift Keying</em>).</li>
-                        <li class="mb-0">Variando o ângulo de fase inicial <strong class="text-info">&phi;(t)</strong>
-                            &rarr; <strong class="text-info">PSK</strong> (<em>Phase Shift Keying</em>).</li>
+                        <li class="mb-3">Variação na frequência <strong class="text-success">f(t)</strong> &rarr;
+                            <strong class="text-success">FSK</strong> (<em>Frequency Shift Keying</em>).
+                        </li>
+                        <li class="mb-0">Variação no ângulo de fase <strong class="text-info">&phi;(t)</strong> &rarr;
+                            <strong class="text-info">PSK</strong> (<em>Phase Shift Keying</em>).
+                        </li>
                     </ul>
                 </div>
 
-                <!-- 2. Comparativo Detalhado das Três Modulações -->
+                <!-- Teoria das 3 Modulações -->
                 <div class="row g-4 mb-4">
-
-                    <!-- ASK -->
-                    <div class="col-12 col-lg-4 delay-2">
-                        <div class="card card-tech card-theory-ask p-4 p-md-5 h-100">
+                    <div class="col-12 col-lg-4">
+                        <div class="card card-tech p-4 h-100" style="border: 2px solid rgba(251, 191, 36, 0.4);">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h3 class="fw-bold text-warning mb-0 fs-2"><i class="bi bi-activity me-2"></i>ASK</h3>
                                 <span class="theory-badge bg-warning bg-opacity-25 text-warning fs-6">Amplitude</span>
                             </div>
                             <h5 class="text-white fw-bold mb-3 fs-4">Chaveamento por Amplitude (OOK)</h5>
-                            <p class="text-white fs-5 mb-3 leading-relaxed">
-                                Na forma binária clássica — chamada <em>On-Off Keying</em> (OOK) —, a presença da
-                                portadora determina o valor lógico:
-                            </p>
-                            <ul class="fs-5 text-white ps-4 mb-4 leading-relaxed">
+                            <ul class="fs-5 text-white ps-4 mb-4">
                                 <li class="mb-2"><strong>Bit 1:</strong> Portadora ligada em amplitude máxima (<span
-                                        class="font-bits text-warning fw-bold">A = 1</span>).</li>
-                                <li class="mb-2"><strong>Bit 0:</strong> Ausência total de sinal, amplitude nula (<span
-                                        class="font-bits text-secondary fw-bold">A = 0</span>).</li>
+                                        class="font-bits text-warning">A = 1</span>).</li>
+                                <li class="mb-2"><strong>Bit 0:</strong> Ausência total de oscilação (<span
+                                        class="font-bits text-white-50">A = 0</span>).</li>
                             </ul>
-                            <hr style="border-color: rgba(251, 191, 36, 0.4);">
-                            <div class="fs-5 leading-relaxed">
-                                <strong class="text-success d-block mb-1"><i
-                                        class="bi bi-check-circle-fill me-2"></i>Vantagem Principal:</strong>
+                            <div class="fs-5">
+                                <strong class="text-success">✓ Vantagem:</strong>
                                 <p class="text-white mb-3">Circuitos transmissores e receptores extremamente simples e
-                                    baratos (detecção por envoltória).</p>
-
-                                <strong class="text-danger d-block mb-1"><i
-                                        class="bi bi-exclamation-triangle-fill me-2"></i>Desvantagem:</strong>
-                                <p class="text-white mb-3">Muito frágil contra ruídos eletromagnéticos, estática
-                                    atmosférica e variações de atenuação.</p>
-
-                                <strong class="text-info d-block mb-1"><i class="bi bi-broadcast me-2"></i>Aplicações no
-                                    Mundo Real:</strong>
-                                <p class="text-white mb-0">Controles remotos de portão (433 MHz), chaves RF veiculares e
-                                    fibras ópticas simples liga/desliga.</p>
+                                    de baixo custo.</p>
+                                <strong class="text-danger">✗ Desvantagem:</strong>
+                                <p class="text-white mb-3">Altamente vulnerável a ruídos impulsivos e variações de
+                                    atenuação no canal.</p>
+                                <strong class="text-info">📡 Aplicações:</strong>
+                                <p class="text-white mb-0">Controles remotos de portão (433 MHz), chaves automotivas RF
+                                    e links ópticos simples.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- FSK -->
-                    <div class="col-12 col-lg-4 delay-3">
-                        <div class="card card-tech card-theory-fsk p-4 p-md-5 h-100">
+                    <div class="col-12 col-lg-4">
+                        <div class="card card-tech p-4 h-100" style="border: 2px solid rgba(52, 211, 153, 0.4);">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h3 class="fw-bold text-success mb-0 fs-2"><i class="bi bi-soundwave me-2"></i>FSK</h3>
                                 <span class="theory-badge bg-success bg-opacity-25 text-success fs-6">Frequência</span>
                             </div>
                             <h5 class="text-white fw-bold mb-3 fs-4">Chaveamento por Frequência</h5>
-                            <p class="text-white fs-5 mb-3 leading-relaxed">
-                                A amplitude e a fase continuam inalteradas; o transmissor comuta entre dois tons de
-                                oscilação:
-                            </p>
-                            <ul class="fs-5 text-white ps-4 mb-4 leading-relaxed">
+                            <ul class="fs-5 text-white ps-4 mb-4">
                                 <li class="mb-2"><strong>Bit 1:</strong> Frequência alta (<span
-                                        class="font-bits text-success fw-bold">f₁</span>, frequência de marca).</li>
+                                        class="font-bits text-success">f₁</span>, marca).</li>
                                 <li class="mb-2"><strong>Bit 0:</strong> Frequência baixa (<span
-                                        class="font-bits text-secondary fw-bold">f₀</span>, frequência de espaço).</li>
+                                        class="font-bits text-white-50">f₀</span>, espaço).</li>
                             </ul>
-                            <hr style="border-color: rgba(52, 211, 153, 0.4);">
-                            <div class="fs-5 leading-relaxed">
-                                <strong class="text-success d-block mb-1"><i
-                                        class="bi bi-check-circle-fill me-2"></i>Vantagem Principal:</strong>
-                                <p class="text-white mb-3">Excelente imunidade contra ruídos de amplitude, pois o dado
-                                    está codificado no ritmo de oscilação.</p>
-
-                                <strong class="text-danger d-block mb-1"><i
-                                        class="bi bi-exclamation-triangle-fill me-2"></i>Desvantagem:</strong>
-                                <p class="text-white mb-3">Ocupa maior largura de banda no espectro de rádio para manter
-                                    a separação entre f₀ e f₁.</p>
-
-                                <strong class="text-info d-block mb-1"><i class="bi bi-broadcast me-2"></i>Aplicações no
-                                    Mundo Real:</strong>
-                                <p class="text-white mb-0">Identificação de chamadas telefônicas (BINA), modems discados
-                                    (V.21), telemetria industrial e rádio teletipo (RTTY).</p>
+                            <div class="fs-5">
+                                <strong class="text-success">✓ Vantagem:</strong>
+                                <p class="text-white mb-3">Elevada imunidade contra ruídos de amplitude, pois o dado
+                                    reside no ritmo temporal.</p>
+                                <strong class="text-danger">✗ Desvantagem:</strong>
+                                <p class="text-white mb-3">Ocupa maior largura de banda espectral para acomodar as duas
+                                    portadoras.</p>
+                                <strong class="text-info">📡 Aplicações:</strong>
+                                <p class="text-white mb-0">Identificação de chamadas (BINA telefônica), telemetria
+                                    remota e modems legados V.21.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- PSK -->
-                    <div class="col-12 col-lg-4 delay-4">
-                        <div class="card card-tech card-theory-psk p-4 p-md-5 h-100">
+                    <div class="col-12 col-lg-4">
+                        <div class="card card-tech p-4 h-100" style="border: 2px solid rgba(96, 165, 250, 0.4);">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h3 class="fw-bold text-info mb-0 fs-2"><i class="bi bi-water me-2"></i>PSK</h3>
                                 <span class="theory-badge bg-info bg-opacity-25 text-info fs-6">Fase / BPSK</span>
                             </div>
                             <h5 class="text-white fw-bold mb-3 fs-4">Chaveamento por Fase (BPSK)</h5>
-                            <p class="text-white fs-5 mb-3 leading-relaxed">
-                                Amplitude e frequência são rigorosamente constantes; o ângulo de partida da senoide
-                                sofre um salto instantâneo:
-                            </p>
-                            <ul class="fs-5 text-white ps-4 mb-4 leading-relaxed">
-                                <li class="mb-2"><strong>Bit 1:</strong> Fase de <span
-                                        class="font-bits text-info fw-bold">0&deg;</span> (a curva senoidal inicia
-                                    subindo).</li>
-                                <li class="mb-2"><strong>Bit 0:</strong> Fase de <span
-                                        class="font-bits text-danger fw-bold">180&deg; (&pi; rad)</span> (inversão
-                                    instantânea, a curva inicia descendo).</li>
+                            <ul class="fs-5 text-white ps-4 mb-4">
+                                <li class="mb-2"><strong>Bit 1:</strong> Fase inicial de <span
+                                        class="font-bits text-info">0&deg;</span>.</li>
+                                <li class="mb-2"><strong>Bit 0:</strong> Inversão instantânea de <span
+                                        class="font-bits text-danger">180&deg; (&pi;)</span>.</li>
                             </ul>
-                            <hr style="border-color: rgba(96, 165, 250, 0.4);">
-                            <div class="fs-5 leading-relaxed">
-                                <strong class="text-success d-block mb-1"><i
-                                        class="bi bi-check-circle-fill me-2"></i>Vantagem Principal:</strong>
-                                <p class="text-white mb-3">Maior eficiência energética e melhor taxa de transmissão em
-                                    canais ruidosos entre todas as técnicas binárias.</p>
-
-                                <strong class="text-danger d-block mb-1"><i
-                                        class="bi bi-exclamation-triangle-fill me-2"></i>Desvantagem:</strong>
-                                <p class="text-white mb-3">Requer demoduladores coerentes com circuitos de sincronismo
-                                    de fase complexos.</p>
-
-                                <strong class="text-info d-block mb-1"><i class="bi bi-broadcast me-2"></i>Aplicações no
-                                    Mundo Real:</strong>
-                                <p class="text-white mb-0">Redes Wi-Fi (802.11b), Bluetooth, comunicação via Satélite
-                                    (GPS, DVB-S2) e a base de QPSK e QAM no 4G e 5G.</p>
+                            <div class="fs-5">
+                                <strong class="text-success">✓ Vantagem:</strong>
+                                <p class="text-white mb-3">Melhor taxa de transmissão por watt consumido em canais
+                                    ruidosos.</p>
+                                <strong class="text-danger">✗ Desvantagem:</strong>
+                                <p class="text-white mb-3">Exige demoduladores com circuitos precisos de sincronismo de
+                                    fase (Carrier Recovery).</p>
+                                <strong class="text-info">📡 Aplicações:</strong>
+                                <p class="text-white mb-0">Comunicação via Satélite (GPS), Bluetooth, Wi-Fi 802.11b e a
+                                    base do QAM no 4G/5G.</p>
                             </div>
                         </div>
                     </div>
-
                 </div>
 
-                <!-- 3. Detecção de Erros com CRC (Cyclic Redundancy Check) -->
-                <div class="card card-tech p-4 p-md-5 delay-2">
+                <!-- Teoria CRC com Aritmética Módulo 2 -->
+                <div class="card card-tech p-4 p-md-5">
                     <div class="d-flex align-items-center gap-3 mb-3">
                         <span
-                            class="theory-badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-50 fs-6">Fundamento
+                            class="theory-badge bg-danger bg-opacity-25 text-danger border border-danger fs-6">Fundamento
                             II</span>
                         <h3 class="fw-bold text-danger mb-0 fs-2"><i class="bi bi-shield-check me-2"></i>Detecção de
-                            Erros: O Que É o CRC e Como Ele Funciona?</h3>
+                            Erros com CRC (Cyclic Redundancy Check)</h3>
                     </div>
 
                     <p class="text-white fs-4 leading-relaxed mt-3">
-                        Durante a propagação da onda no meio analógico, interferências podem corromper símbolos,
-                        invertendo bits (fazendo um <code>1</code> virar <code>0</code> ou vice-versa). O <strong
-                            class="text-white">CRC (Cyclic Redundancy Check)</strong> é um mecanismo da Camada de Enlace
-                        que permite ao receptor verificar com precisão matemática se a mensagem sofreu qualquer
-                        alteração no percurso.
+                        O algoritmo <strong>CRC</strong> trata blocos binários como polinômios com coeficientes em
+                        aritmética módulo 2. A divisão utiliza a operação lógica <strong>OU-Exclusivo (XOR)</strong>,
+                        eliminando o "vai-um" ou empréstimos:
                     </p>
 
                     <div class="row g-4 mt-3">
-                        <!-- Lógica do XOR -->
                         <div class="col-12 col-md-5">
                             <div class="p-4 rounded-4 h-100"
-                                style="background: rgba(0,0,0,0.5); border: 2px solid var(--card-border);">
-                                <h5 class="fw-bold text-info mb-3 fs-4"><i class="bi bi-shuffle me-2"></i>Aritmética
-                                    Módulo 2 (Porta XOR)</h5>
-                                <p class="text-white fs-5 mb-4 leading-relaxed">
-                                    A divisão binária do CRC não possui "vai-um" nem empréstimo. Ela utiliza puramente a
-                                    operação lógica <strong class="text-white">OU-Exclusivo (XOR)</strong>:
-                                </p>
-                                <div class="xor-truth-table">
-                                    <table
-                                        class="table table-dark table-bordered text-center align-middle mb-0 font-bits">
-                                        <thead class="table-secondary text-dark fs-5">
-                                            <tr>
-                                                <th>Bit A</th>
-                                                <th>Bit B</th>
-                                                <th>A &oplus; B (XOR)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="fs-5">
-                                            <tr>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td class="text-secondary fw-bold">0 (bits iguais)</td>
-                                            </tr>
-                                            <tr>
-                                                <td>0</td>
-                                                <td>1</td>
-                                                <td class="text-info fw-bold">1 (diferentes)</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0</td>
-                                                <td class="text-info fw-bold">1 (diferentes)</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td class="text-secondary fw-bold">0 (bits iguais)</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                style="background: #030712; border: 2px solid var(--card-border);">
+                                <h5 class="fw-bold text-info mb-3 fs-4"><i class="bi bi-shuffle me-2"></i>Tabela Verdade
+                                    XOR (Módulo 2)</h5>
+                                <table
+                                    class="table table-dark table-bordered text-center align-middle mb-0 font-bits fs-5">
+                                    <thead style="background: #1e293b; color: #38bdf8;">
+                                        <tr>
+                                            <th>Bit A</th>
+                                            <th>Bit B</th>
+                                            <th>A &oplus; B (XOR)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td class="text-white-50 fw-bold">0 (iguais)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>1</td>
+                                            <td class="text-info fw-bold">1 (diferentes)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>0</td>
+                                            <td class="text-info fw-bold">1 (diferentes)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>1</td>
+                                            <td class="text-white-50 fw-bold">0 (iguais)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
-                        <!-- Passo a Passo do Algoritmo -->
                         <div class="col-12 col-md-7">
                             <div class="p-4 rounded-4 h-100"
-                                style="background: rgba(0,0,0,0.5); border: 2px solid var(--card-border);">
+                                style="background: #030712; border: 2px solid var(--card-border);">
                                 <h5 class="fw-bold text-success mb-3 fs-4"><i class="bi bi-list-ol me-2"></i>Passo a
-                                    Passo Rigoroso do Cálculo</h5>
+                                    Passo Algorítmico</h5>
                                 <ol class="text-white fs-5 ps-4 mb-0 leading-relaxed">
-                                    <li class="mb-3">
-                                        Seja <strong class="text-info">M</strong> a mensagem de dados e <strong
-                                            class="text-info">G</strong> o polinômio divisor de tamanho <span
-                                            class="text-warning font-bits fw-bold">n</span> bits. O grau do polinômio é
-                                        <span class="text-warning font-bits fw-bold">r = n &minus; 1</span>.
+                                    <li class="mb-2">Seja <strong class="text-info">M</strong> a mensagem de dados e
+                                        <strong class="text-info">G</strong> o divisor de grau <span
+                                            class="text-warning font-bits fw-bold">r = n &minus; 1</span>.
                                     </li>
-                                    <li class="mb-3">
-                                        Anexam-se exatamente <span class="text-warning font-bits fw-bold">r</span> zeros
-                                        ao final da mensagem original <strong class="text-info">M</strong>, gerando a
-                                        sequência expandida de trabalho.
+                                    <li class="mb-2">Anexam-se exatamente <span
+                                            class="text-warning font-bits fw-bold">r</span> zeros ao final da mensagem.
                                     </li>
-                                    <li class="mb-3">
-                                        Alinha-se o divisor <strong class="text-info">G</strong> com o primeiro bit
-                                        <code>1</code> mais à esquerda e executa-se a operação XOR bit a bit.
-                                    </li>
-                                    <li class="mb-3">
-                                        O processo repete-se sucessivamente deslocando-se para a direita a cada zero
-                                        resultante, até processar todos os bits da mensagem.
-                                    </li>
-                                    <li class="mb-3">
-                                        O resíduo remanescente final de <span
-                                            class="text-warning font-bits fw-bold">r</span> bits é o <strong
-                                            class="text-danger fw-bold">Resto do CRC</strong>.
-                                    </li>
-                                    <li class="mb-0">
-                                        A sequência transmitida pelo canal é: <strong
-                                            class="text-success font-bits fw-bold">Palavra = Mensagem + CRC</strong>. O
-                                        receptor refaz a divisão pelo mesmo divisor <strong
-                                            class="text-info">G</strong>: se o resto for zero, o quadro é aceito como
-                                        100% íntegro!
-                                    </li>
+                                    <li class="mb-2">Alinha-se o divisor com o primeiro bit <code>1</code> mais à
+                                        esquerda e executa-se a operação XOR.</li>
+                                    <li class="mb-2">Desloca-se à direita até processar todos os bits da mensagem
+                                        original.</li>
+                                    <li class="mb-2">O resíduo de <span class="text-warning font-bits fw-bold">r</span>
+                                        bits é o <strong>Resto do CRC</strong>.</li>
+                                    <li class="mb-0">Palavra transmitida: <strong
+                                            class="text-success font-bits">Mensagem + CRC</strong>. O receptor refaz a
+                                        divisão pelo mesmo polinômio: <strong>se o resto for zero, o quadro é
+                                            aceito!</strong></li>
                                 </ol>
                             </div>
                         </div>
@@ -941,7 +1413,7 @@
         </div>
     </div>
 
-    <!-- Notificação Flutuante de Cópia -->
+    <!-- Toast de Notificação -->
     <div class="toast-custom" id="toastMsg">
         <i class="bi bi-check-circle-fill me-2"></i>Palavra-Código copiada com sucesso!
     </div>
@@ -950,7 +1422,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // --- Referências DOM ---
+        /* ========================================================================= */
+        /* PARTE 1: TRANSMISSOR CRC (TX) E RECEPTOR COM CONTAS COMPLETAS DETALHADAS  */
+        /* ========================================================================= */
         const inputMensagem = document.getElementById('inputMensagem');
         const inputDivisor = document.getElementById('inputDivisor');
         const btnCalcularCRC = document.getElementById('btnCalcularCRC');
@@ -971,46 +1445,222 @@
         const btnCopiarChave = document.getElementById('btnCopiarChave');
         const toastMsg = document.getElementById('toastMsg');
 
+        const codewordDisplay = document.getElementById('codewordDisplay');
+        const btnRestaurarNormal = document.getElementById('btnRestaurarNormal');
+        const btnInjetarErro1 = document.getElementById('btnInjetarErro1');
+
+        const rxStatusBox = document.getElementById('rxStatusBox');
+        const rxStatusIcon = document.getElementById('rxStatusIcon');
+        const rxStatusTitle = document.getElementById('rxStatusTitle');
+        const rxStatusDesc = document.getElementById('rxStatusDesc');
+        const rxRemainder = document.getElementById('rxRemainder');
+        const rxErrorCount = document.getElementById('rxErrorCount');
+        const boxRxPassosXor = document.getElementById('boxRxPassosXor');
+        const txtRxQuociente = document.getElementById('txtRxQuociente');
+
         const limparBinario = s => s.replace(/[^01]/g, '');
 
-        // --- Motor Polinomial CRC Universal ---
-        function calcularCRCUniversal(msg, divisor) {
+        const crcState = {
+            originalCodeword: '',
+            receivedCodeword: [],
+            divisor: '1101',
+            msgLength: 8,
+            r: 3
+        };
+
+        // ALGORITMO COM AS CONTAS COMPLETAS EXPLICANDO CADA PASSO DETALHADAMENTE
+        function calcularCRCCompletoExplicado(msg, divisor, isVerification) {
             const r = divisor.length - 1;
-            if (r <= 0) return { crc: '', chaveCompleta: msg, passos: ['Divisor inválido (precisa ter ≥ 2 bits)'], quociente: '', r: 0 };
+            if (r <= 0) {
+                return {
+                    crc: '', codeword: msg, quotient: '', r: 0,
+                    stepsStr: 'ERRO: O polinômio divisor precisa ter no mínimo 2 bits (grau r ≥ 1).'
+                };
+            }
 
-            const paddedMsg = msg + '0'.repeat(r);
-            let rem = paddedMsg.split('');
-            let div = divisor.split('');
-            let passos = [];
-            let quociente = '';
+            const paddedMsg = isVerification ? msg : msg + '0'.repeat(r);
+            const rem = paddedMsg.split('');
+            const div = divisor.split('');
+            const steps = [];
+            let quotient = '';
+            let etapa = 1;
 
-            passos.push(`1. Mensagem expandida com ${r} zeros: ${paddedMsg}`);
-            passos.push(`2. Polinômio divisor G(x): ${divisor}`);
-            passos.push(`----------------------------------------------------------------`);
+            steps.push(`========================================================================`);
+            steps.push(isVerification ? `  MEMÓRIA DE CÁLCULO DO RECEPTOR (RX) - VERIFICAÇÃO DE INTEGRIDADE` : `  MEMÓRIA DE CÁLCULO DO TRANSMISSOR (TX) - GERAÇÃO DO CRC`);
+            steps.push(`========================================================================`);
+            steps.push(`• Dados Iniciais:`);
+            steps.push(`  - Sequência de entrada: ${isVerification ? msg + ' (Palavra Recebida)' : msg + ' (Mensagem Original)'}`);
+            steps.push(`  - Polinômio Divisor G(x): ${divisor} (${divisor.length} bits, grau r = ${r})`);
+            if (!isVerification) {
+                steps.push(`  - Anexo de zeros à direita: ${r} zeros adicionados (grau do polinômio)`);
+                steps.push(`  - Sequência expandida para divisão: ${paddedMsg}`);
+            }
+            steps.push(`------------------------------------------------------------------------`);
+            steps.push(`DEMONSTRAÇÃO DETALHADA DA DIVISÃO POLINOMIAL (PORTAS XOR PASSO A PASSO):`);
+            steps.push(`------------------------------------------------------------------------\n`);
 
             for (let i = 0; i <= rem.length - divisor.length; i++) {
-                if (rem[i] === '1') {
-                    quociente += '1';
-                    let pedacoAntes = rem.slice(i, i + divisor.length).join('');
+                const bitAtual = rem[i];
+                const pedacoDividendo = rem.slice(i, i + divisor.length).join('');
+
+                if (bitAtual === '1') {
+                    quotient += '1';
                     for (let j = 0; j < divisor.length; j++) {
                         rem[i + j] = (rem[i + j] === div[j]) ? '0' : '1';
                     }
-                    let pedacoDepois = rem.slice(i, i + divisor.length).join('');
-                    passos.push(`Posição ${i + 1}: ${pedacoAntes} ⊕ ${divisor} = ${pedacoDepois}`);
+                    const pedacoResultado = rem.slice(i, i + divisor.length).join('');
+
+                    steps.push(`[Etapa ${etapa.toString().padStart(2, '0')}] Posição ${i + 1}: Bit mais significativo é '1'`);
+                    steps.push(`         -> O divisor cabe! Adiciona '1' ao quociente Q.`);
+                    steps.push(`         Dividendo Parcial:   ${pedacoDividendo}`);
+                    steps.push(`       ⊕ Divisor G(x):        ${divisor}`);
+                    steps.push(`       -----------------------------`);
+                    steps.push(`       = Resultado XOR:       ${pedacoResultado}`);
+                    if (i + divisor.length < rem.length) {
+                        steps.push(`         (Descarta o '0' à esquerda e baixa o próximo bit: '${rem[i + divisor.length]}')\n`);
+                    } else {
+                        steps.push(`         (Todos os bits de dados foram processados)\n`);
+                    }
                 } else {
-                    quociente += '0';
+                    quotient += '0';
+                    steps.push(`[Etapa ${etapa.toString().padStart(2, '0')}] Posição ${i + 1}: Bit mais significativo é '0'`);
+                    steps.push(`         -> O divisor NÃO cabe! Adiciona '0' ao quociente Q.`);
+                    steps.push(`         Desloca 1 posição à direita sem aplicar XOR.\n`);
                 }
+                etapa++;
             }
 
             const crc = rem.slice(-r).join('');
-            passos.push(`----------------------------------------------------------------`);
-            passos.push(`Resto final do CRC (${r} bits): ${crc}`);
-            passos.push(`Palavra-código transmitida (Codeword): ${msg + crc}`);
 
-            return { crc, chaveCompleta: msg + crc, passos, quociente, r };
+            steps.push(`------------------------------------------------------------------------`);
+            steps.push(`RESULTADO FINAL DAS CONTAS:`);
+            steps.push(`• Quociente completo Q = ${quotient}`);
+            steps.push(`• Resto final da divisão (${r} bits) = ${crc}`);
+            if (!isVerification) {
+                steps.push(`• Montagem da Palavra-Código Transmitida:`);
+                steps.push(`  Mensagem Original (${msg}) + Resto CRC (${crc}) = ${msg + crc}`);
+            } else {
+                const isZero = !crc.includes('1');
+                if (isZero) {
+                    steps.push(`• DIAGNÓSTICO MATEMÁTICO: Resto = ${crc} (IGUAL A ZERO)`);
+                    steps.push(`  -> SUCESSO ABSOLUTO! Teorema do resto prova que NENHUM bit foi corrompido.`);
+                    steps.push(`  -> Quadro APROVADO pela Camada de Enlace (ACK).`);
+                } else {
+                    steps.push(`• DIAGNÓSTICO MATEMÁTICO: Resto = ${crc} (DIFERENTE DE ZERO)`);
+                    steps.push(`  -> ALERTA DE CORRUPÇÃO! A divisão resultou em resto não-nulo.`);
+                    steps.push(`  -> O quadro sofreu interferência no canal e foi DESCARTADO (NACK).`);
+                }
+            }
+            steps.push(`========================================================================`);
+
+            return {
+                crc,
+                codeword: msg + crc,
+                stepsStr: steps.join('\n'),
+                quotient,
+                r
+            };
         }
 
-        // --- Renderização da Tabela Bit a Bit com Letras Amplas ---
+        function renderInteractiveCodeword() {
+            codewordDisplay.innerHTML = '';
+            crcState.receivedCodeword.forEach((bit, i) => {
+                const originalBit = crcState.originalCodeword[i];
+                const hasError = bit !== originalBit;
+                const isMsgBit = i < crcState.msgLength;
+
+                const box = document.createElement('div');
+                box.className = `bit-box ${isMsgBit ? 'msg-bit' : 'crc-bit'} ${hasError ? 'has-error' : ''}`;
+                box.title = `Bit #${i + 1} (${isMsgBit ? 'Mensagem' : 'CRC'}). Clique para inverter (Bit Flip)!`;
+                box.innerHTML = `
+                    <span style="font-size: 0.72rem; color: ${hasError ? '#ffffff' : '#94a3b8'};">#${i + 1}</span>
+                    <span style="font-size: 1.4rem; font-weight: 800;">${bit}</span>
+                    <span style="font-size: 0.65rem; color: ${hasError ? '#fca5a5' : (isMsgBit ? '#38bdf8' : '#f43f5e')};">
+                        ${hasError ? 'ERRO' : (isMsgBit ? 'DADO' : 'CRC')}
+                    </span>
+                `;
+
+                box.addEventListener('click', () => {
+                    crcState.receivedCodeword[i] = (crcState.receivedCodeword[i] === '0') ? '1' : '0';
+                    renderInteractiveCodeword();
+                    updateReceiverVerification();
+                });
+
+                codewordDisplay.appendChild(box);
+            });
+        }
+
+        function updateReceiverVerification() {
+            const receivedStr = crcState.receivedCodeword.join('');
+            const res = calcularCRCCompletoExplicado(receivedStr, crcState.divisor, true);
+            const hasError = res.crc.includes('1');
+            const errorCount = crcState.receivedCodeword.filter((b, i) => b !== crcState.originalCodeword[i]).length;
+
+            boxRxPassosXor.innerText = res.stepsStr;
+            txtRxQuociente.innerText = `Q = ${res.quotient}`;
+            rxRemainder.innerText = res.crc;
+            rxErrorCount.innerText = errorCount;
+
+            if (hasError) {
+                rxStatusBox.className = 'rx-status-box err';
+                rxStatusIcon.innerHTML = '<i class="bi bi-x-octagon-fill fs-1 text-danger"></i>';
+                rxStatusTitle.innerText = 'QUADRO REJEITADO (NACK)';
+                rxStatusTitle.className = 'fw-bold fs-3 mb-2 text-danger';
+                rxStatusDesc.innerHTML = `Resto da verificação = <strong class="text-warning font-bits">${res.crc}</strong> ≠ 0`;
+                boxRxPassosXor.classList.add('corrupted');
+            } else {
+                rxStatusBox.className = 'rx-status-box ok';
+                rxStatusIcon.innerHTML = '<i class="bi bi-check-circle-fill fs-1 text-success"></i>';
+                rxStatusTitle.innerText = 'QUADRO APROVADO (ACK)';
+                rxStatusTitle.className = 'fw-bold fs-3 mb-2 text-success';
+                rxStatusDesc.innerHTML = `Resto da verificação = <strong class="text-warning font-bits">${res.crc}</strong> = 0`;
+                boxRxPassosXor.classList.remove('corrupted');
+            }
+
+            inputModulacaoManual.value = receivedStr;
+            renderizarSinais(crcState.receivedCodeword, crcState.msgLength);
+        }
+
+        function executarCRC() {
+            let msg = limparBinario(inputMensagem.value) || '10110011';
+            let div = limparBinario(inputDivisor.value);
+            if (div.length < 2) div = '1101';
+
+            inputMensagem.value = msg;
+            inputDivisor.value = div;
+
+            const res = calcularCRCCompletoExplicado(msg, div, false);
+
+            crcState.originalCodeword = res.codeword;
+            crcState.receivedCodeword = res.codeword.split('');
+            crcState.divisor = div;
+            crcState.msgLength = msg.length;
+            crcState.r = res.r;
+
+            txtCrcOutput.innerText = res.crc || '0';
+            badgeCrcLength.innerText = `${res.r} bits`;
+            txtChaveCompleta.value = res.codeword;
+            txtQuociente.innerText = `Q = ${res.quotient}`;
+            boxPassosXor.innerText = res.stepsStr;
+
+            renderInteractiveCodeword();
+            updateReceiverVerification();
+        }
+
+        btnRestaurarNormal.addEventListener('click', () => {
+            crcState.receivedCodeword = crcState.originalCodeword.split('');
+            renderInteractiveCodeword();
+            updateReceiverVerification();
+        });
+
+        btnInjetarErro1.addEventListener('click', () => {
+            if (crcState.receivedCodeword.length === 0) return;
+            const target = Math.floor(crcState.receivedCodeword.length / 2);
+            crcState.receivedCodeword[target] = (crcState.receivedCodeword[target] === '1') ? '0' : '1';
+            renderInteractiveCodeword();
+            updateReceiverVerification();
+        });
+
         function atualizarTabela(bits, msgLength) {
             tabelaEstadosCorpo.innerHTML = '';
             bits.forEach((b, idx) => {
@@ -1019,16 +1669,15 @@
                 row.innerHTML = `
                     <td class="text-white fw-bold fs-5">${idx + 1}</td>
                     <td><span class="badge ${isOriginal ? 'bg-primary' : 'bg-danger'} fs-6 px-3 py-2">${isOriginal ? 'MENSAGEM' : 'CRC'}</span></td>
-                    <td class="fw-bold font-bits fs-4 ${b === '1' ? 'text-info' : 'text-secondary'}">${b}</td>
-                    <td>${b === '1' ? '<span class="text-warning fw-bold fs-5">Portadora Ativa (A = 1)</span>' : '<span class="text-secondary fs-5">Desligada (A = 0)</span>'}</td>
-                    <td>${b === '1' ? '<span class="text-success fw-bold fs-5">Frequência Alta (f₁)</span>' : '<span class="text-white fs-5">Frequência Baixa (f₀)</span>'}</td>
-                    <td>${b === '1' ? '<span class="text-info fw-bold fs-5">Fase 0&deg; (Normal)</span>' : '<span class="text-danger fw-bold fs-5">Fase Invertida 180&deg; (&pi;)</span>'}</td>
+                    <td class="fw-bold font-bits fs-4 ${b === '1' ? 'text-info' : 'text-white-50'}">${b}</td>
+                    <td>${b === '1' ? '<span class="text-warning fw-bold fs-5">Portadora Ativa (A = 1)</span>' : '<span class="text-white-50 fs-5">Desligada (A = 0)</span>'}</td>
+                    <td>${b === '1' ? '<span class="text-success fw-bold fs-5">Freq. Alta (f₁)</span>' : '<span class="text-white fs-5">Freq. Baixa (f₀)</span>'}</td>
+                    <td>${b === '1' ? '<span class="text-info fw-bold fs-5">Fase 0&deg;</span>' : '<span class="text-danger fw-bold fs-5">Fase 180&deg; (&pi;)</span>'}</td>
                 `;
                 tabelaEstadosCorpo.appendChild(row);
             });
         }
 
-        // --- Canvas e Traçado das Ondas com Linhas e Rótulos Grandes ---
         function prepararCanvas(canvasId, totalBits, bitWidth) {
             const canvas = document.getElementById(canvasId);
             const dpr = window.devicePixelRatio || 1;
@@ -1043,17 +1692,13 @@
 
             const ctx = canvas.getContext('2d');
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            ctx.shadowBlur = 10;
-
             return { ctx, width: totalWidth, height: hAttr, bitWidth };
         }
 
         function desenharEixosEGrid(ctx, bits, bitWidth, height) {
             ctx.clearRect(0, 0, ctx.canvas.width, height);
-            ctx.shadowBlur = 0;
             const midY = height / 2;
 
-            // Linha central de amplitude zero
             ctx.strokeStyle = '#334155';
             ctx.lineWidth = 1.5;
             ctx.beginPath();
@@ -1061,7 +1706,6 @@
             ctx.lineTo(ctx.canvas.width, midY);
             ctx.stroke();
 
-            // Divisórias verticais e Rótulos com Letras Grandes (16px)
             bits.forEach((bit, i) => {
                 const x = i * bitWidth;
                 ctx.strokeStyle = '#475569';
@@ -1072,37 +1716,24 @@
                 ctx.stroke();
                 ctx.setLineDash([]);
 
-                // Rótulo grande do Bit no topo
                 ctx.fillStyle = (bit === '1') ? '#38bdf8' : '#94a3b8';
-                ctx.font = 'bold 16px "JetBrains Mono", monospace';
+                ctx.font = 'bold 15px "JetBrains Mono", monospace';
                 ctx.textAlign = 'center';
                 ctx.fillText(`b[${i}]=${bit}`, x + bitWidth / 2, 20);
             });
-
-            ctx.strokeStyle = '#475569';
-            ctx.setLineDash([5, 5]);
-            ctx.beginPath();
-            ctx.moveTo(bits.length * bitWidth, 0);
-            ctx.lineTo(bits.length * bitWidth, height);
-            ctx.stroke();
-            ctx.setLineDash([]);
         }
 
         function desenharBandaBase(bits, bitWidth) {
             const { ctx, height } = prepararCanvas('canvasBase', bits.length, bitWidth);
             desenharEixosEGrid(ctx, bits, bitWidth, height);
-
             const highY = 32, lowY = height - 18;
             ctx.strokeStyle = '#c084fc';
             ctx.lineWidth = 3.5;
-            ctx.shadowColor = '#c084fc';
             ctx.beginPath();
-
             bits.forEach((bit, i) => {
                 const xStart = i * bitWidth;
                 const xEnd = xStart + bitWidth;
                 const targetY = (bit === '1') ? highY : lowY;
-
                 if (i === 0) ctx.moveTo(xStart, targetY);
                 else {
                     const prevY = (bits[i - 1] === '1') ? highY : lowY;
@@ -1116,21 +1747,16 @@
         function desenharASK(bits, bitWidth, cycles) {
             const { ctx, height } = prepararCanvas('canvasASK', bits.length, bitWidth);
             desenharEixosEGrid(ctx, bits, bitWidth, height);
-
             const midY = height / 2 + 8, amp = height * 0.36;
             ctx.strokeStyle = '#fbbf24';
             ctx.lineWidth = 3;
-            ctx.shadowColor = '#fbbf24';
             ctx.beginPath();
-
             let started = false;
             bits.forEach((bit, i) => {
                 const xStart = i * bitWidth;
                 const isOne = (bit === '1');
-                const samples = 100;
-
-                for (let s = 0; s <= samples; s++) {
-                    const t = s / samples;
+                for (let s = 0; s <= 80; s++) {
+                    const t = s / 80;
                     const x = xStart + t * bitWidth;
                     const y = isOne ? midY - amp * Math.sin(2 * Math.PI * cycles * t) : midY;
                     if (!started) { ctx.moveTo(x, y); started = true; } else { ctx.lineTo(x, y); }
@@ -1142,21 +1768,16 @@
         function desenharFSK(bits, bitWidth, baseCycles) {
             const { ctx, height } = prepararCanvas('canvasFSK', bits.length, bitWidth);
             desenharEixosEGrid(ctx, bits, bitWidth, height);
-
             const midY = height / 2 + 8, amp = height * 0.36;
             ctx.strokeStyle = '#34d399';
             ctx.lineWidth = 3;
-            ctx.shadowColor = '#34d399';
             ctx.beginPath();
-
             let started = false;
             bits.forEach((bit, i) => {
                 const xStart = i * bitWidth;
                 const cycles = (bit === '1') ? (baseCycles * 2) : baseCycles;
-                const samples = 100;
-
-                for (let s = 0; s <= samples; s++) {
-                    const t = s / samples;
+                for (let s = 0; s <= 80; s++) {
+                    const t = s / 80;
                     const x = xStart + t * bitWidth;
                     const y = midY - amp * Math.sin(2 * Math.PI * cycles * t);
                     if (!started) { ctx.moveTo(x, y); started = true; } else { ctx.lineTo(x, y); }
@@ -1168,21 +1789,16 @@
         function desenharPSK(bits, bitWidth, cycles) {
             const { ctx, height } = prepararCanvas('canvasPSK', bits.length, bitWidth);
             desenharEixosEGrid(ctx, bits, bitWidth, height);
-
             const midY = height / 2 + 8, amp = height * 0.36;
             ctx.strokeStyle = '#60a5fa';
             ctx.lineWidth = 3;
-            ctx.shadowColor = '#60a5fa';
             ctx.beginPath();
-
             let started = false;
             bits.forEach((bit, i) => {
                 const xStart = i * bitWidth;
                 const phase = (bit === '1') ? 0 : Math.PI;
-                const samples = 100;
-
-                for (let s = 0; s <= samples; s++) {
-                    const t = s / samples;
+                for (let s = 0; s <= 80; s++) {
+                    const t = s / 80;
                     const x = xStart + t * bitWidth;
                     const y = midY - amp * Math.sin(2 * Math.PI * cycles * t + phase);
                     if (!started) { ctx.moveTo(x, y); started = true; } else { ctx.lineTo(x, y); }
@@ -1194,7 +1810,6 @@
         function renderizarSinais(bits, msgLength) {
             const bitWidth = parseInt(rangeZoom.value, 10);
             const cycles = parseInt(rangeCiclos.value, 10);
-
             desenharBandaBase(bits, bitWidth);
             desenharASK(bits, bitWidth, cycles);
             desenharFSK(bits, bitWidth, cycles);
@@ -1202,65 +1817,39 @@
             atualizarTabela(bits, msgLength);
         }
 
-        // --- Execução Principal do CRC ---
-        function executarCRC() {
-            let msg = limparBinario(inputMensagem.value) || '10110011';
-            let div = limparBinario(inputDivisor.value);
-            if (div.length < 2) div = '1101';
-
-            inputMensagem.value = msg;
-            inputDivisor.value = div;
-
-            const res = calcularCRCUniversal(msg, div);
-            txtCrcOutput.innerText = res.crc || '0';
-            badgeCrcLength.innerText = `${res.r} bits`;
-            txtChaveCompleta.value = res.chaveCompleta;
-            txtQuociente.innerText = `Q = ${res.quociente}`;
-            boxPassosXor.innerHTML = res.passos.map(p => `<div>${p}</div>`).join('');
-
-            inputModulacaoManual.value = res.chaveCompleta;
-            renderizarSinais(res.chaveCompleta.split(''), msg.length);
-        }
-
-        // --- Event Listeners ---
         inputModulacaoManual.addEventListener('input', () => {
-            let bitsStr = limparBinario(inputModulacaoManual.value) || '1';
-            renderizarSinais(bitsStr.split(''), bitsStr.length);
+            const bitsStr = limparBinario(inputModulacaoManual.value) || '1';
+            crcState.receivedCodeword = bitsStr.split('');
+            renderInteractiveCodeword();
+            updateReceiverVerification();
         });
 
-        rangeZoom.addEventListener('input', () => {
-            let bitsStr = limparBinario(inputModulacaoManual.value) || '1';
-            renderizarSinais(bitsStr.split(''), bitsStr.length);
-        });
-
-        rangeCiclos.addEventListener('input', () => {
-            let bitsStr = limparBinario(inputModulacaoManual.value) || '1';
-            renderizarSinais(bitsStr.split(''), bitsStr.length);
-        });
+        rangeZoom.addEventListener('input', () => updateReceiverVerification());
+        rangeCiclos.addEventListener('input', () => updateReceiverVerification());
 
         btnLimpar.addEventListener('click', () => {
             inputModulacaoManual.value = '';
-            renderizarSinais(['0'], 1);
-            inputModulacaoManual.focus();
+            crcState.receivedCodeword = ['0'];
+            renderInteractiveCodeword();
+            updateReceiverVerification();
         });
 
         btnAleatorio8.addEventListener('click', () => {
             let r = ''; for (let i = 0; i < 8; i++) r += Math.random() > 0.5 ? '1' : '0';
-            inputModulacaoManual.value = r;
-            renderizarSinais(r.split(''), r.length);
+            inputMensagem.value = r;
+            executarCRC();
         });
 
         btnAleatorio16.addEventListener('click', () => {
             let r = ''; for (let i = 0; i < 16; i++) r += Math.random() > 0.5 ? '1' : '0';
-            inputModulacaoManual.value = r;
-            renderizarSinais(r.split(''), r.length);
+            inputMensagem.value = r;
+            executarCRC();
         });
 
         btnInverter.addEventListener('click', () => {
-            let bitsStr = limparBinario(inputModulacaoManual.value) || '1';
-            let inv = bitsStr.split('').map(b => b === '1' ? '0' : '1').join('');
-            inputModulacaoManual.value = inv;
-            renderizarSinais(inv.split(''), inv.length);
+            crcState.receivedCodeword = crcState.receivedCodeword.map(b => b === '1' ? '0' : '1');
+            renderInteractiveCodeword();
+            updateReceiverVerification();
         });
 
         btnCalcularCRC.addEventListener('click', executarCRC);
@@ -1272,13 +1861,684 @@
             });
         });
 
-        window.addEventListener('resize', () => {
-            let bitsStr = limparBinario(inputModulacaoManual.value) || '1';
-            renderizarSinais(bitsStr.split(''), bitsStr.length);
+        /* ========================================================================= */
+        /* PARTE 2: TOPOLOGIAS DINÂMICAS: ANIMAÇÃO EM MALHA E CLIQUE PARA QUEBRAR NÓ */
+        /* ========================================================================= */
+        const canvasTopo = document.getElementById('canvasTopologias');
+        const ctxTopo = canvasTopo.getContext('2d');
+        const descTopologia = document.getElementById('descTopologia');
+        const statusTopologiaInterativa = document.getElementById('statusTopologiaInterativa');
+        const btnRestaurarTopologia = document.getElementById('btnRestaurarTopologia');
+
+        let currentTopology = 'estrela';
+        let packetProgress = 0;
+
+        let topoNodesState = {
+            estrela: { switchOk: true, hosts: [true, true, true, true, true] },
+            barramento: { busBroken: false, hosts: [true, true, true, true, true] },
+            anel: { nodes: [true, true, true, true, true] },
+            malha: { routers: [true, true, true, true, true] },
+            p2p: { a: true, b: true, linkBroken: false }
+        };
+
+        let clickableNodes = [];
+
+        const topoDescricoes = {
+            estrela: '<strong>Topologia em Estrela:</strong> Todos os nós ligam-se a um Switch central. <em>Clique em qualquer computador para desligá-lo (somente ele para) ou clique no Switch central para derrubar a rede toda!</em>',
+            barramento: '<strong>Topologia em Barramento (Bus):</strong> Todos compartilham a linha física terminada em 50Ω. <em>Clique na barra do cabo para simular um corte mecânico e derrubar todo o barramento!</em>',
+            anel: '<strong>Topologia em Anel (Ring):</strong> Circuito fechado onde o Token circula. <em>Clique em qualquer nó para quebrar o anel e interromper a circulação do Token!</em>',
+            malha: '<strong>Topologia em Malha (Mesh com Animação Ativa):</strong> Roteamento dinâmico redundante! Múltiplos pacotes viajam em rotas cruzadas. <em>Clique em qualquer Roteador para quebrá-lo e veja os pacotes desviarem automaticamente pelas rotas sobreviventes!</em>',
+            p2p: '<strong>Topologia Ponto-a-Ponto (P2P):</strong> Enlace dedicado direto. <em>Clique no transmissor, no receptor ou no cabo para interromper a conexão!</em>'
+        };
+        descTopologia.innerHTML = topoDescricoes.estrela;
+
+        function ajustarCanvasDpr(cv, ctx, h) {
+            const dpr = window.devicePixelRatio || 1;
+            const w = cv.parentElement.clientWidth - 36;
+            cv.width = w * dpr;
+            cv.height = h * dpr;
+            cv.style.width = w + 'px';
+            cv.style.height = h + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return { w, h };
+        }
+
+        function desenharNoInterativo(ctx, x, y, label, isCenter, isBroken, idTag) {
+            clickableNodes.push({ x, y, r: isCenter ? 26 : 20, idTag });
+
+            ctx.beginPath();
+            ctx.arc(x, y, isCenter ? 24 : 18, 0, Math.PI * 2);
+            ctx.fillStyle = isBroken ? '#7f1d1d' : (isCenter ? '#0ea5e9' : '#1e293b');
+            ctx.fill();
+            ctx.lineWidth = 3.5;
+            ctx.strokeStyle = isBroken ? '#ef4444' : (isCenter ? '#34d399' : '#22d3ee');
+            ctx.stroke();
+
+            if (isBroken) {
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 16px "Outfit", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('✖', x, y);
+            }
+
+            ctx.fillStyle = isBroken ? '#fca5a5' : '#ffffff';
+            ctx.font = 'bold 14px "Outfit", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(label + (isBroken ? ' [FALHA]' : ''), x, y + (isCenter ? 36 : 28));
+        }
+
+        function animarTopologias() {
+            const { w, h } = ajustarCanvasDpr(canvasTopo, ctxTopo, 320);
+            ctxTopo.clearRect(0, 0, w, h);
+            clickableNodes = [];
+            packetProgress = (packetProgress + 0.015) % 1;
+
+            const cx = w / 2, cy = h / 2;
+            const nodes = 5, radius = Math.min(w, h) * 0.38;
+
+            if (currentTopology === 'estrela') {
+                const est = topoNodesState.estrela;
+                const switchVivo = est.switchOk;
+
+                for (let i = 0; i < nodes; i++) {
+                    const ang = (i * 2 * Math.PI) / nodes;
+                    const nx = cx + radius * Math.cos(ang);
+                    const ny = cy + radius * Math.sin(ang);
+                    const hostVivo = est.hosts[i] && switchVivo;
+
+                    ctxTopo.beginPath();
+                    ctxTopo.moveTo(cx, cy);
+                    ctxTopo.lineTo(nx, ny);
+                    ctxTopo.lineWidth = 2.5;
+                    ctxTopo.strokeStyle = hostVivo ? '#334155' : '#ef4444';
+                    ctxTopo.stroke();
+
+                    if (hostVivo) {
+                        const px = cx + (nx - cx) * packetProgress;
+                        const py = cy + (ny - cy) * packetProgress;
+                        ctxTopo.beginPath();
+                        ctxTopo.arc(px, py, 6, 0, Math.PI * 2);
+                        ctxTopo.fillStyle = '#38bdf8';
+                        ctxTopo.fill();
+                    }
+
+                    desenharNoInterativo(ctxTopo, nx, ny, `Host ${i + 1}`, false, !est.hosts[i], `host_${i}`);
+                }
+                desenharNoInterativo(ctxTopo, cx, cy, 'Switch Central', true, !est.switchOk, 'switch_central');
+
+            } else if (currentTopology === 'barramento') {
+                const bar = topoNodesState.barramento;
+                const yBus = cy, xStart = w * 0.15, xEnd = w * 0.85;
+
+                clickableNodes.push({ x: (xStart + xEnd) / 2, y: yBus, r: 40, idTag: 'bus_cable' });
+
+                ctxTopo.beginPath();
+                ctxTopo.moveTo(xStart, yBus);
+                ctxTopo.lineTo(xEnd, yBus);
+                ctxTopo.lineWidth = 7;
+                ctxTopo.strokeStyle = bar.busBroken ? '#ef4444' : '#475569';
+                ctxTopo.stroke();
+
+                ctxTopo.fillStyle = bar.busBroken ? '#7f1d1d' : '#f87171';
+                ctxTopo.fillRect(xStart - 10, yBus - 15, 10, 30);
+                ctxTopo.fillRect(xEnd, yBus - 15, 10, 30);
+
+                const step = (xEnd - xStart) / (nodes - 1);
+                for (let i = 0; i < nodes; i++) {
+                    const nx = xStart + i * step;
+                    const ny = (i % 2 === 0) ? yBus - 75 : yBus + 75;
+                    const hostVivo = bar.hosts[i] && !bar.busBroken;
+
+                    ctxTopo.beginPath();
+                    ctxTopo.moveTo(nx, yBus);
+                    ctxTopo.lineTo(nx, ny);
+                    ctxTopo.lineWidth = 2.5;
+                    ctxTopo.strokeStyle = hostVivo ? '#334155' : '#ef4444';
+                    ctxTopo.stroke();
+
+                    desenharNoInterativo(ctxTopo, nx, ny, `Host ${i + 1}`, false, !bar.hosts[i], `barhost_${i}`);
+                }
+
+                if (!bar.busBroken) {
+                    const pBusX = xStart + (xEnd - xStart) * packetProgress;
+                    ctxTopo.beginPath();
+                    ctxTopo.arc(pBusX, yBus, 8, 0, Math.PI * 2);
+                    ctxTopo.fillStyle = '#fbbf24';
+                    ctxTopo.fill();
+                } else {
+                    ctxTopo.fillStyle = '#ef4444';
+                    ctxTopo.font = 'bold 18px "Outfit", sans-serif';
+                    ctxTopo.textAlign = 'center';
+                    ctxTopo.fillText('⚡ CABO ROMPIDO! BARRAMENTO FORA DO AR ⚡', (xStart + xEnd) / 2, yBus - 20);
+                }
+
+            } else if (currentTopology === 'anel') {
+                const anel = topoNodesState.anel;
+                const pts = [];
+                for (let i = 0; i < nodes; i++) {
+                    const ang = (i * 2 * Math.PI) / nodes;
+                    pts.push({ x: cx + radius * Math.cos(ang), y: cy + radius * Math.sin(ang) });
+                }
+
+                let anelIntegro = anel.nodes.every(n => n);
+
+                ctxTopo.beginPath();
+                for (let i = 0; i < nodes; i++) {
+                    const next = pts[(i + 1) % nodes];
+                    ctxTopo.moveTo(pts[i].x, pts[i].y);
+                    ctxTopo.lineTo(next.x, next.y);
+                }
+                ctxTopo.lineWidth = 3;
+                ctxTopo.strokeStyle = anelIntegro ? '#a855f7' : '#ef4444';
+                ctxTopo.stroke();
+
+                pts.forEach((p, idx) => {
+                    desenharNoInterativo(ctxTopo, p.x, p.y, `Nó ${idx + 1}`, false, !anel.nodes[idx], `anelnode_${idx}`);
+                });
+
+                if (anelIntegro) {
+                    const segment = Math.floor(packetProgress * nodes);
+                    const subT = (packetProgress * nodes) % 1;
+                    const p1 = pts[segment], p2 = pts[(segment + 1) % nodes];
+                    const tokX = p1.x + (p2.x - p1.x) * subT;
+                    const tokY = p1.y + (p2.y - p1.y) * subT;
+
+                    ctxTopo.beginPath();
+                    ctxTopo.arc(tokX, tokY, 9, 0, Math.PI * 2);
+                    ctxTopo.fillStyle = '#e879f9';
+                    ctxTopo.fill();
+                } else {
+                    ctxTopo.fillStyle = '#ef4444';
+                    ctxTopo.font = 'bold 16px "Outfit", sans-serif';
+                    ctxTopo.textAlign = 'center';
+                    ctxTopo.fillText('ANEL ROMPIDO: Token Bloqueado!', cx, cy);
+                }
+
+            } else if (currentTopology === 'malha') {
+                const malha = topoNodesState.malha;
+                const pts = [];
+                for (let i = 0; i < nodes; i++) {
+                    const ang = (i * 2 * Math.PI) / nodes;
+                    pts.push({ x: cx + radius * Math.cos(ang), y: cy + radius * Math.sin(ang) });
+                }
+
+                for (let i = 0; i < nodes; i++) {
+                    for (let j = i + 1; j < nodes; j++) {
+                        const enlaceOk = malha.routers[i] && malha.routers[j];
+                        ctxTopo.beginPath();
+                        ctxTopo.moveTo(pts[i].x, pts[i].y);
+                        ctxTopo.lineTo(pts[j].x, pts[j].y);
+                        ctxTopo.lineWidth = enlaceOk ? 2 : 1;
+                        ctxTopo.strokeStyle = enlaceOk ? '#1e293b' : 'rgba(239, 68, 68, 0.3)';
+                        ctxTopo.stroke();
+                    }
+                }
+
+                const rotasAtivas = [
+                    { de: 0, para: 2, cor: '#22d3ee' },
+                    { de: 1, para: 3, cor: '#34d399' },
+                    { de: 3, para: 4, cor: '#fbbf24' },
+                    { de: 4, para: 1, cor: '#c084fc' }
+                ];
+
+                rotasAtivas.forEach((rota, idx) => {
+                    let origem = rota.de;
+                    let destino = rota.para;
+
+                    if (!malha.routers[origem]) {
+                        origem = (origem + 1) % nodes;
+                    }
+                    if (!malha.routers[destino]) {
+                        destino = (destino + 2) % nodes;
+                    }
+
+                    if (malha.routers[origem] && malha.routers[destino] && origem !== destino) {
+                        const pProg = (packetProgress + idx * 0.25) % 1;
+                        const p1 = pts[origem];
+                        const p2 = pts[destino];
+                        const px = p1.x + (p2.x - p1.x) * pProg;
+                        const py = p1.y + (p2.y - p1.y) * pProg;
+
+                        ctxTopo.beginPath();
+                        ctxTopo.moveTo(p1.x, p1.y);
+                        ctxTopo.lineTo(p2.x, p2.y);
+                        ctxTopo.lineWidth = 2.5;
+                        ctxTopo.strokeStyle = rota.cor;
+                        ctxTopo.stroke();
+
+                        ctxTopo.beginPath();
+                        ctxTopo.arc(px, py, 7, 0, Math.PI * 2);
+                        ctxTopo.fillStyle = rota.cor;
+                        ctxTopo.fill();
+                    }
+                });
+
+                pts.forEach((p, idx) => {
+                    desenharNoInterativo(ctxTopo, p.x, p.y, `Roteador ${idx + 1}`, false, !malha.routers[idx], `router_${idx}`);
+                });
+
+            } else if (currentTopology === 'p2p') {
+                const p2p = topoNodesState.p2p;
+                const x1 = cx - radius * 1.2, x2 = cx + radius * 1.2;
+                const linkAtivo = p2p.a && p2p.b && !p2p.linkBroken;
+
+                clickableNodes.push({ x: cx, y: cy, r: 35, idTag: 'p2p_link' });
+
+                ctxTopo.beginPath();
+                ctxTopo.moveTo(x1, cy);
+                ctxTopo.lineTo(x2, cy);
+                ctxTopo.lineWidth = 4;
+                ctxTopo.strokeStyle = linkAtivo ? '#06b6d4' : '#ef4444';
+                ctxTopo.stroke();
+
+                if (linkAtivo) {
+                    const px = x1 + (x2 - x1) * packetProgress;
+                    ctxTopo.beginPath();
+                    ctxTopo.arc(px, cy, 8, 0, Math.PI * 2);
+                    ctxTopo.fillStyle = '#22d3ee';
+                    ctxTopo.fill();
+                }
+
+                desenharNoInterativo(ctxTopo, x1, cy, 'Host TX', false, !p2p.a, 'p2p_a');
+                desenharNoInterativo(ctxTopo, x2, cy, 'Host RX', false, !p2p.b, 'p2p_b');
+            }
+
+            requestAnimationFrame(animarTopologias);
+        }
+
+        canvasTopo.addEventListener('click', (e) => {
+            const rect = canvasTopo.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            clickableNodes.forEach(node => {
+                const dist = Math.hypot(clickX - node.x, clickY - node.y);
+                if (dist <= node.r) {
+                    processarCliqueTopologia(node.idTag);
+                }
+            });
         });
 
-        // Inicialização
-        window.onload = executarCRC;
+        function processarCliqueTopologia(tag) {
+            if (currentTopology === 'estrela') {
+                if (tag === 'switch_central') {
+                    topoNodesState.estrela.switchOk = !topoNodesState.estrela.switchOk;
+                    statusTopologiaInterativa.innerHTML = topoNodesState.estrela.switchOk
+                        ? `<span class="status-pill bg-success text-white">Switch Central Restaurado! Toda a rede voltou a se comunicar.</span>`
+                        : `<span class="status-pill bg-danger text-white">SWITCH CENTRAL CAIU: Toda a rede estrela parou! Ponto único de falha.</span>`;
+                } else if (tag.startsWith('host_')) {
+                    const idx = parseInt(tag.split('_')[1], 10);
+                    topoNodesState.estrela.hosts[idx] = !topoNodesState.estrela.hosts[idx];
+                    statusTopologiaInterativa.innerHTML = `<span class="status-pill bg-warning text-dark fw-bold">Host ${idx + 1} foi ${topoNodesState.estrela.hosts[idx] ? 'restaurado' : 'desconectado'}. Na estrela, apenas ele é afetado!</span>`;
+                }
+            } else if (currentTopology === 'barramento') {
+                if (tag === 'bus_cable') {
+                    topoNodesState.barramento.busBroken = !topoNodesState.barramento.busBroken;
+                    statusTopologiaInterativa.innerHTML = topoNodesState.barramento.busBroken
+                        ? `<span class="status-pill bg-danger text-white">CORTE NO CABO PRINCIPAL: O barramento inteiro parou por reflexão de onda!</span>`
+                        : `<span class="status-pill bg-success text-white">Barramento restaurado e terminadores ativos.</span>`;
+                } else if (tag.startsWith('barhost_')) {
+                    const idx = parseInt(tag.split('_')[1], 10);
+                    topoNodesState.barramento.hosts[idx] = !topoNodesState.barramento.hosts[idx];
+                }
+            } else if (currentTopology === 'anel') {
+                if (tag.startsWith('anelnode_')) {
+                    const idx = parseInt(tag.split('_')[1], 10);
+                    topoNodesState.anel.nodes[idx] = !topoNodesState.anel.nodes[idx];
+                    statusTopologiaInterativa.innerHTML = topoNodesState.anel.nodes[idx]
+                        ? `<span class="status-pill bg-success text-white">Nó ${idx + 1} do Anel restaurado. Token voltou a circular.</span>`
+                        : `<span class="status-pill bg-danger text-white">Nó ${idx + 1} quebrou: O anel foi interrompido e o Token travou!</span>`;
+                }
+            } else if (currentTopology === 'malha') {
+                if (tag.startsWith('router_')) {
+                    const idx = parseInt(tag.split('_')[1], 10);
+                    topoNodesState.malha.routers[idx] = !topoNodesState.malha.routers[idx];
+                    statusTopologiaInterativa.innerHTML = topoNodesState.malha.routers[idx]
+                        ? `<span class="status-pill bg-success text-white">Roteador ${idx + 1} operacional novamente na malha.</span>`
+                        : `<span class="status-pill bg-warning text-dark fw-bold">Roteador ${idx + 1} falhou! ROTEAMENTO DINÂMICO: Os pacotes desviaram automaticamente pelas outras rotas!</span>`;
+                }
+            } else if (currentTopology === 'p2p') {
+                if (tag === 'p2p_a') topoNodesState.p2p.a = !topoNodesState.p2p.a;
+                if (tag === 'p2p_b') topoNodesState.p2p.b = !topoNodesState.p2p.b;
+                if (tag === 'p2p_link') topoNodesState.p2p.linkBroken = !topoNodesState.p2p.linkBroken;
+            }
+        }
+
+        btnRestaurarTopologia.addEventListener('click', () => {
+            topoNodesState = {
+                estrela: { switchOk: true, hosts: [true, true, true, true, true] },
+                barramento: { busBroken: false, hosts: [true, true, true, true, true] },
+                anel: { nodes: [true, true, true, true, true] },
+                malha: { routers: [true, true, true, true, true] },
+                p2p: { a: true, b: true, linkBroken: false }
+            };
+            statusTopologiaInterativa.innerHTML = `<span class="status-pill bg-dark text-info border border-info"><i class="bi bi-info-circle"></i> Todos os nós e enlaces foram restaurados e estão operacionais.</span>`;
+        });
+
+        document.querySelectorAll('.btn-topo').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.btn-topo').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTopology = btn.getAttribute('data-topo');
+                descTopologia.innerHTML = topoDescricoes[currentTopology];
+                statusTopologiaInterativa.innerHTML = `<span class="status-pill bg-dark text-info border border-info"><i class="bi bi-info-circle"></i> Topologia alternada para ${btn.innerText}. Clique nos nós para interagir.</span>`;
+            });
+        });
+
+        /* ========================================================================= */
+        /* PARTE 3: LABORATÓRIO DE DEFEITOS EM CABOS                                 */
+        /* ========================================================================= */
+        const canvasDefeitoCabo = document.getElementById('canvasDefeitoCabo');
+        const ctxDefeito = canvasDefeitoCabo.getContext('2d');
+        const tituloDefeitoCabo = document.getElementById('tituloDefeitoCabo');
+        const descDefeitoCabo = document.getElementById('descDefeitoCabo');
+        const statusDefeitoCabo = document.getElementById('statusDefeitoCabo');
+
+        let modoCaboAtual = 'normal';
+        let caboPktProgress = 0;
+
+        const infoDefeitos = {
+            normal: {
+                titulo: 'Condição: Cabo Íntegro (Cat 6 Full-Duplex)',
+                desc: 'Vias separadas para envio e recepção (TX e RX). Os pulsos elétricos trafegam com sinal limpo e sem atenuação. Throughput de 1000 Mbps e taxa de erro zero.',
+                status: '<span class="status-pill bg-dark text-success border border-success"><i class="bi bi-check-circle-fill"></i> Link Ativo: 1000 Mbps Full-Duplex &bull; 0% de Perda &bull; CRC OK</span>'
+            },
+            rompido: {
+                titulo: 'Defeito 1: Cabo Rompido / Desconectado (Open Circuit)',
+                desc: 'Houve ruptura mecânica de um ou mais pares de cobre. O sinal viaja até a falha, sofre reflexão e não chega ao destino. A interface de rede cai (Link Down - 100% de perda).',
+                status: '<span class="status-pill bg-danger text-white"><i class="bi bi-x-octagon-fill"></i> LINK DOWN: 100% Packet Loss! Ruptura Física Detectada por TDR</span>'
+            },
+            emi: {
+                titulo: 'Defeito 2: Interferência Eletromagnética (EMI / Crosstalk)',
+                desc: 'O cabo não-blindado (UTP) passa próximo a motores elétricos ou fiação de alta tensão. Ruídos eletromagnéticos induzem picos de tensão espúrios que invertem bits (Bit Flip). O receptor detecta CRC incorreto e descarta os pacotes.',
+                status: '<span class="status-pill bg-warning text-dark fw-bold"><i class="bi bi-radioactive"></i> ALERTA EMI: Ruído Induzido &bull; CRC Inválido &bull; Pacotes Descartados por FCS</span>'
+            },
+            distancia: {
+                titulo: 'Defeito 3: Distância Excessiva Além do Padrão (> 100 metros)',
+                desc: 'A resistência do cobre e a capacitância parasita causam atenuação severa e dispersão. O pulso quadrado de alta frequência vira uma onda amortecida ilegível. O receptor perde sincronismo de clock.',
+                status: '<span class="status-pill bg-danger text-white"><i class="bi bi-rulers"></i> ATENUAÇÃO CRÍTICA: Sinal Fraco Abaixo do Limiar de Recepção</span>'
+            },
+            colisao: {
+                titulo: 'Defeito 4: Colisão em Barramento Compartilhado (Hub Half-Duplex / CSMA/CD)',
+                desc: 'Em ambientes com Hub ou cabo coaxial, duas estações transmitindo simultaneamente somam suas amplitudes elétricas no fio. A colisão destrói os dados, emite sinal Jamming e força o recuo (Backoff).',
+                status: '<span class="status-pill bg-danger text-white"><i class="bi bi-exclamation-triangle-fill"></i> COLISÃO DETECTADA NO CABO! Sinal Jamming Emitido &bull; Backoff Ativo</span>'
+            }
+        };
+
+        function animarDefeitosCabo() {
+            const { w, h } = ajustarCanvasDpr(canvasDefeitoCabo, ctxDefeito, 230);
+            ctxDefeito.clearRect(0, 0, w, h);
+            caboPktProgress = (caboPktProgress + 0.008) % 1;
+
+            const cy = h / 2;
+            const xA = w * 0.15, xB = w * 0.85;
+
+            desenharNoInterativo(ctxDefeito, xA, cy, 'Estação TX', false, false, 'tx');
+            desenharNoInterativo(ctxDefeito, xB, cy, 'Estação RX', false, false, 'rx');
+
+            if (modoCaboAtual === 'normal') {
+                ctxDefeito.strokeStyle = '#10b981';
+                ctxDefeito.lineWidth = 4;
+                ctxDefeito.beginPath();
+                ctxDefeito.moveTo(xA + 25, cy - 12);
+                ctxDefeito.lineTo(xB - 25, cy - 12);
+                ctxDefeito.stroke();
+
+                ctxDefeito.strokeStyle = '#06b6d4';
+                ctxDefeito.beginPath();
+                ctxDefeito.moveTo(xB - 25, cy + 12);
+                ctxDefeito.lineTo(xA + 25, cy + 12);
+                ctxDefeito.stroke();
+
+                const px1 = (xA + 25) + (xB - xA - 50) * caboPktProgress;
+                ctxDefeito.beginPath();
+                ctxDefeito.arc(px1, cy - 12, 7, 0, Math.PI * 2);
+                ctxDefeito.fillStyle = '#34d399';
+                ctxDefeito.fill();
+
+                const px2 = (xB - 25) - (xB - xA - 50) * caboPktProgress;
+                ctxDefeito.beginPath();
+                ctxDefeito.arc(px2, cy + 12, 7, 0, Math.PI * 2);
+                ctxDefeito.fillStyle = '#22d3ee';
+                ctxDefeito.fill();
+
+            } else if (modoCaboAtual === 'rompido') {
+                const breakX = (xA + xB) / 2;
+
+                ctxDefeito.strokeStyle = '#ef4444';
+                ctxDefeito.lineWidth = 4;
+                ctxDefeito.beginPath();
+                ctxDefeito.moveTo(xA + 25, cy);
+                ctxDefeito.lineTo(breakX - 20, cy);
+                ctxDefeito.stroke();
+
+                ctxDefeito.fillStyle = '#ef4444';
+                ctxDefeito.font = 'bold 22px "Outfit", sans-serif';
+                ctxDefeito.fillText('✂ CORTE', breakX, cy - 25);
+
+                ctxDefeito.strokeStyle = '#475569';
+                ctxDefeito.setLineDash([5, 5]);
+                ctxDefeito.beginPath();
+                ctxDefeito.moveTo(breakX + 20, cy);
+                ctxDefeito.lineTo(xB - 25, cy);
+                ctxDefeito.stroke();
+                ctxDefeito.setLineDash([]);
+
+                const segP = caboPktProgress * 2;
+                if (segP < 1) {
+                    const px = (xA + 25) + (breakX - 20 - xA - 25) * segP;
+                    ctxDefeito.beginPath();
+                    ctxDefeito.arc(px, cy, 7, 0, Math.PI * 2);
+                    ctxDefeito.fillStyle = '#38bdf8';
+                    ctxDefeito.fill();
+                } else {
+                    const retP = segP - 1;
+                    const px = (breakX - 20) - (breakX - 20 - xA - 25) * retP;
+                    ctxDefeito.beginPath();
+                    ctxDefeito.arc(px, cy, 7, 0, Math.PI * 2);
+                    ctxDefeito.fillStyle = '#f87171';
+                    ctxDefeito.fill();
+                }
+
+            } else if (modoCaboAtual === 'emi') {
+                ctxDefeito.strokeStyle = '#f59e0b';
+                ctxDefeito.lineWidth = 4;
+                ctxDefeito.beginPath();
+                ctxDefeito.moveTo(xA + 25, cy);
+                ctxDefeito.lineTo(xB - 25, cy);
+                ctxDefeito.stroke();
+
+                const emiX = (xA + xB) / 2;
+                ctxDefeito.fillStyle = 'rgba(245, 158, 11, 0.15)';
+                ctxDefeito.fillRect(emiX - 80, cy - 40, 160, 80);
+
+                ctxDefeito.fillStyle = '#fbbf24';
+                ctxDefeito.font = 'bold 14px "JetBrains Mono", monospace';
+                ctxDefeito.textAlign = 'center';
+                ctxDefeito.fillText('⚡ CAMPO EMI (ALTA TENSÃO) ⚡', emiX, cy - 50);
+
+                const px = (xA + 25) + (xB - xA - 50) * caboPktProgress;
+                const inNoise = (px >= emiX - 80 && px <= emiX + 80);
+
+                ctxDefeito.beginPath();
+                ctxDefeito.arc(px, cy + (inNoise ? (Math.random() * 8 - 4) : 0), 8, 0, Math.PI * 2);
+                ctxDefeito.fillStyle = inNoise ? '#ef4444' : '#34d399';
+                ctxDefeito.fill();
+
+            } else if (modoCaboAtual === 'distancia') {
+                ctxDefeito.strokeStyle = '#f87171';
+                ctxDefeito.lineWidth = 3;
+                ctxDefeito.beginPath();
+                ctxDefeito.moveTo(xA + 25, cy);
+                ctxDefeito.lineTo(xB - 25, cy);
+                ctxDefeito.stroke();
+
+                ctxDefeito.fillStyle = '#fca5a5';
+                ctxDefeito.font = 'bold 15px "Outfit", sans-serif';
+                ctxDefeito.textAlign = 'center';
+                ctxDefeito.fillText('Extensão: 180 metros (Limite da norma: 100m)', (xA + xB) / 2, cy - 30);
+
+                const px = (xA + 25) + (xB - xA - 50) * caboPktProgress;
+                const radius = Math.max(1, 9 * (1 - caboPktProgress));
+                ctxDefeito.beginPath();
+                ctxDefeito.arc(px, cy, radius, 0, Math.PI * 2);
+                ctxDefeito.fillStyle = '#f87171';
+                ctxDefeito.fill();
+
+            } else if (modoCaboAtual === 'colisao') {
+                ctxDefeito.strokeStyle = '#ef4444';
+                ctxDefeito.lineWidth = 5;
+                ctxDefeito.beginPath();
+                ctxDefeito.moveTo(xA + 25, cy);
+                ctxDefeito.lineTo(xB - 25, cy);
+                ctxDefeito.stroke();
+
+                const p1 = (xA + 25) + (xB - xA - 50) * (caboPktProgress * 1.4);
+                const p2 = (xB - 25) - (xB - xA - 50) * (caboPktProgress * 1.4);
+
+                if (p1 < p2) {
+                    ctxDefeito.beginPath(); ctxDefeito.arc(p1, cy, 8, 0, Math.PI * 2); ctxDefeito.fillStyle = '#38bdf8'; ctxDefeito.fill();
+                    ctxDefeito.beginPath(); ctxDefeito.arc(p2, cy, 8, 0, Math.PI * 2); ctxDefeito.fillStyle = '#fbbf24'; ctxDefeito.fill();
+                } else {
+                    const colX = (xA + xB) / 2;
+                    ctxDefeito.beginPath();
+                    ctxDefeito.arc(colX, cy, 25 + Math.random() * 8, 0, Math.PI * 2);
+                    ctxDefeito.fillStyle = 'rgba(239, 68, 68, 0.7)';
+                    ctxDefeito.fill();
+
+                    ctxDefeito.fillStyle = '#ffffff';
+                    ctxDefeito.font = 'bold 16px "JetBrains Mono", monospace';
+                    ctxDefeito.textAlign = 'center';
+                    ctxDefeito.fillText('💥 COLISÃO!', colX, cy - 35);
+                }
+            }
+
+            requestAnimationFrame(animarDefeitosCabo);
+        }
+
+        document.querySelectorAll('.btn-cabo-mode').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.btn-cabo-mode').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                modoCaboAtual = btn.getAttribute('data-mode');
+                const info = infoDefeitos[modoCaboAtual];
+                tituloDefeitoCabo.innerText = info.titulo;
+                descDefeitoCabo.innerText = info.desc;
+                statusDefeitoCabo.innerHTML = info.status;
+                caboPktProgress = 0;
+            });
+        });
+
+        /* ========================================================================= */
+        /* PARTE 4: CORRIDA ANIMADA: CABO VS WI-FI                                   */
+        /* ========================================================================= */
+        const canvasCorrida = document.getElementById('canvasCorrida');
+        const ctxCorrida = canvasCorrida.getContext('2d');
+        const btnDispararCorrida = document.getElementById('btnDispararCorrida');
+        const statusCorrida = document.getElementById('statusCorrida');
+
+        let corridaPktCabo = 0;
+        let wifiTimer = 0;
+
+        function animarCorrida() {
+            const { w, h } = ajustarCanvasDpr(canvasCorrida, ctxCorrida, 260);
+            ctxCorrida.clearRect(0, 0, w, h);
+
+            const yCabo = 65;
+            const yWifi = 185;
+            const xStart = 160, xEnd = w - 120;
+
+            ctxCorrida.fillStyle = '#4ade80';
+            ctxCorrida.font = 'bold 16px "Outfit", sans-serif';
+            ctxCorrida.textAlign = 'left';
+            ctxCorrida.fillText('CABO ETHERNET (Full-Duplex):', 20, yCabo - 25);
+
+            ctxCorrida.strokeStyle = '#10b981';
+            ctxCorrida.lineWidth = 4;
+            ctxCorrida.beginPath();
+            ctxCorrida.moveTo(xStart, yCabo);
+            ctxCorrida.lineTo(xEnd, yCabo);
+            ctxCorrida.stroke();
+
+            ctxCorrida.fillStyle = '#fb923c';
+            ctxCorrida.fillText('WI-FI (Half-Duplex com Fila):', 20, yWifi - 25);
+
+            ctxCorrida.strokeStyle = '#f59e0b';
+            ctxCorrida.lineWidth = 4;
+            ctxCorrida.beginPath();
+            ctxCorrida.moveTo(xStart, yWifi);
+            ctxCorrida.lineTo(xEnd, yWifi);
+            ctxCorrida.stroke();
+
+            desenharNoInterativo(ctxCorrida, xStart - 35, yCabo, 'Switch TX', false, false, 'cabo_tx');
+            desenharNoInterativo(ctxCorrida, xEnd + 35, yCabo, 'Host RX', false, false, 'cabo_rx');
+
+            desenharNoInterativo(ctxCorrida, xStart - 35, yWifi, 'Cliente TX', false, false, 'wifi_tx');
+            desenharNoInterativo(ctxCorrida, xEnd + 35, yWifi, 'AP Wi-Fi', false, false, 'wifi_rx');
+
+            corridaPktCabo = (corridaPktCabo + 0.016) % 1;
+            for (let i = 0; i < 3; i++) {
+                const prog = (corridaPktCabo + i * 0.33) % 1;
+                const px = xStart + (xEnd - xStart) * prog;
+                ctxCorrida.beginPath();
+                ctxCorrida.arc(px, yCabo, 8, 0, Math.PI * 2);
+                ctxCorrida.fillStyle = '#34d399';
+                ctxCorrida.fill();
+            }
+
+            wifiTimer += 0.012;
+            if (wifiTimer < 1.2) {
+                ctxCorrida.fillStyle = '#f87171';
+                ctxCorrida.font = 'bold 15px "JetBrains Mono", monospace';
+                ctxCorrida.textAlign = 'center';
+                ctxCorrida.fillText('⏳ FILA / BACKOFF: Canal Ocupado!', (xStart + xEnd) / 2, yWifi - 15);
+
+                ctxCorrida.beginPath();
+                ctxCorrida.arc(xStart + 20, yWifi, 8, 0, Math.PI * 2);
+                ctxCorrida.fillStyle = '#fb923c';
+                ctxCorrida.fill();
+            } else if (wifiTimer < 2.4) {
+                const prog = (wifiTimer - 1.2) / 1.2;
+                const px = xStart + (xEnd - xStart) * prog;
+                ctxCorrida.beginPath();
+                ctxCorrida.arc(px, yWifi, 8, 0, Math.PI * 2);
+                ctxCorrida.fillStyle = '#fbbf24';
+                ctxCorrida.fill();
+
+                ctxCorrida.fillStyle = '#34d399';
+                ctxCorrida.font = 'bold 14px "JetBrains Mono", monospace';
+                ctxCorrida.textAlign = 'center';
+                ctxCorrida.fillText('TRANSMITINDO NO AR...', (xStart + xEnd) / 2, yWifi - 15);
+            } else if (wifiTimer < 3.2) {
+                ctxCorrida.fillStyle = '#38bdf8';
+                ctxCorrida.font = 'bold 14px "JetBrains Mono", monospace';
+                ctxCorrida.textAlign = 'center';
+                ctxCorrida.fillText('ESPERANDO ACK...', (xStart + xEnd) / 2, yWifi - 15);
+            } else {
+                wifiTimer = 0;
+            }
+
+            requestAnimationFrame(animarCorrida);
+        }
+
+        btnDispararCorrida.addEventListener('click', () => {
+            wifiTimer = 0;
+            statusCorrida.innerHTML = `<span class="status-pill bg-success text-white"><i class="bi bi-speedometer2"></i> Benchmark em execução: O cabo transmite pacotes continuamente enquanto o Wi-Fi gasta tempo em fila (Backoff)!</span>`;
+        });
+
+        // Inicialização Global
+        window.addEventListener('load', () => {
+            executarCRC();
+            animarTopologias();
+            animarDefeitosCabo();
+            animarCorrida();
+        });
+
+        window.addEventListener('resize', () => {
+            updateReceiverVerification();
+        });
     </script>
 </body>
 
