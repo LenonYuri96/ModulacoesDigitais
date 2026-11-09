@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeleLab: CRC &amp; Modulações Digitais</title>
+
+    <!-- Bootstrap 5 CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Google Fonts para tipografia legível e moderna -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #020617;
+            --bg-gradient: radial-gradient(circle at 15% 50%, rgba(8, 145, 178, 0.12), transparent 45%),
+                radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.12), transparent 45%);
+            --card-bg: rgba(15, 23, 42, 0.78);
+            --card-border: rgba(71, 85, 105, 0.65);
+            --primary-cyan: #22d3ee;
+            --ask-color: #fbbf24;
+            --fsk-color: #34d399;
+            --psk-color: #60a5fa;
+            --base-color: #c084fc;
+            --text-main: #ffffff;
+            --text-soft: #cbd5e1;
+            --danger: #f87171;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* TIPOGRAFIA GLOBAL AUMENTADA */
+        body {
+            background-color: var(--bg-main);
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Outfit', system-ui, sans-serif;
+            font-size: 1.15rem;
+            /* Base ampliada de 16px para ~18.5px */
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Tipografia Monoespaçada para Códigos e Fórmulas */
+        .font-bits,
+        code,
+        .math-formula,
+        .xor-step {
+            font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+            letter-spacing: 2px;
+        }
+
+        /* ---------- Efeito Glassmorphism nos Cards ---------- */
+        .card-tech {
+            background: var(--card-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1.5px solid var(--card-border);
+            border-radius: 20px;
+            box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .card-tech:hover {
+            border-color: rgba(34, 211, 238, 0.45);
+            box-shadow: 0 18px 45px -10px rgba(34, 211, 238, 0.2);
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-4 {
+            animation-delay: 0.4s;
+        }
+
+        /* ---------- Barra de Topo ---------- */
+        .navbar-tech {
+            background: rgba(2, 6, 23, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand-title {
+            background: linear-gradient(to right, #22d3ee, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            font-size: 1.85rem;
+        }
+
+        /* ---------- Abas Customizadas (Tabs) com Tamanho Grande ---------- */
+        .nav-tech {
+            background: rgba(15, 23, 42, 0.85);
+            padding: 8px;
+            border-radius: 16px;
+            border: 1.5px solid var(--card-border);
+            display: inline-flex;
+            gap: 8px;
+            backdrop-filter: blur(8px);
+        }
+
+        .nav-tech .nav-link {
+            color: var(--text-soft);
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            padding: 12px 32px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .nav-tech .nav-link:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-tech .nav-link.active {
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.25), rgba(129, 140, 248, 0.25));
+            color: var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.25);
+            border: 1.5px solid rgba(34, 211, 238, 0.45);
+        }
+
+        /* ---------- Inputs e Botões com Letras Grandes ---------- */
+        .form-control {
+            background: rgba(0, 0, 0, 0.5) !important;
+            border: 1.5px solid var(--card-border) !important;
+            color: var(--text-main) !important;
+            font-size: 1.35rem !important;
+            padding: 12px 18px !important;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-cyan) !important;
+            box-shadow: 0 0 0 5px rgba(34, 211, 238, 0.25) !important;
+            background: rgba(0, 0, 0, 0.75) !important;
+        }
+
+        .btn-tech {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            border: none;
+            color: white;
+            font-weight: 700;
+            font-size: 1.25rem;
+            padding: 12px 24px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.35);
+        }
+
+        .btn-tech:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(6, 182, 212, 0.55);
+            color: white;
+        }
+
+        .btn-tech:active {
+            transform: translateY(1px);
+        }
+
+        .btn-outline-cyan {
+            color: var(--primary-cyan);
+            border: 1.5px solid rgba(34, 211, 238, 0.6);
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 8px 18px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-cyan:hover {
+            background: rgba(34, 211, 238, 0.15);
+            border-color: var(--primary-cyan);
+            color: var(--primary-cyan);
+        }
+
+        /* ---------- Área dos Gráficos (Canvas) ---------- */
+        .canvas-wrapper {
+            background: #030712;
+            border: 1.5px solid var(--card-border);
+            border-radius: 14px;
+            overflow-x: auto;
+            padding: 18px;
+            position: relative;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);
+        }
+
+        canvas {
+            display: block;
+        }
+
+        .canvas-wrapper::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        .canvas-wrapper::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 8px;
+        }
+
+        /* ---------- Caixa de Divisão XOR (Estilo Terminal com Letra Grande) ---------- */
+        .xor-step {
+            background: #020617;
+            color: #34d399;
+            border: 1.5px solid #064e3b;
+            border-left: 5px solid #10b981;
+            border-radius: 10px;
+            padding: 18px;
+            max-height: 280px;
+            overflow-y: auto;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            box-shadow: inset 0 0 20px rgba(16, 185, 129, 0.08);
+        }
+
+        /* ---------- Tabelas Estilizadas e Muito Legíveis ---------- */
+        .table-tech {
+            color: var(--text-main);
+            --bs-table-bg: transparent;
+            border-collapse: separate;
+            border-spacing: 0 6px;
+            font-size: 1.15rem;
+        }
+
+        .table-tech thead th {
+            background: rgba(30, 41, 59, 0.95) !important;
+            color: var(--primary-cyan) !important;
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: 0.5px;
+            padding: 14px 18px;
+            border: none;
+        }
+
+        .table-tech tbody tr {
+            background: rgba(15, 23, 42, 0.7);
+            transition: all 0.2s ease;
+        }
+
+        .table-tech tbody tr:hover {
+            background: rgba(34, 211, 238, 0.12);
+            transform: scale(1.002);
+        }
+
+        .table-tech td {
+            border: none;
+            padding: 14px 18px;
+            vertical-align: middle;
+        }
+
+        /* ---------- Estilos da Aula Teórica com Fórmulas Gigantes ---------- */
+        .math-box {
+            background: rgba(2, 6, 23, 0.9);
+            border: 2px solid rgba(34, 211, 238, 0.4);
+            border-left: 6px solid var(--primary-cyan);
+            border-radius: 16px;
+            padding: 1.75rem;
+            box-shadow: 0 0 35px rgba(34, 211, 238, 0.15);
+        }
+
+        .math-formula {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #38bdf8;
+            letter-spacing: 1px;
+        }
+
+        .theory-badge {
+            font-size: 0.95rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 800;
+            padding: 6px 14px;
+            border-radius: 8px;
+        }
+
+        .card-theory-ask {
+            border: 2px solid rgba(251, 191, 36, 0.4);
+            background: linear-gradient(180deg, rgba(251, 191, 36, 0.1) 0%, rgba(15, 23, 42, 0.75) 100%);
+        }
+
+        .card-theory-fsk {
+            border: 2px solid rgba(52, 211, 153, 0.4);
+            background: linear-gradient(180deg, rgba(52, 211, 153, 0.1) 0%, rgba(15, 23, 42, 0.75) 100%);
+        }
+
+        .card-theory-psk {
+            border: 2px solid rgba(96, 165, 250, 0.4);
+            background: linear-gradient(180deg, rgba(96, 165, 250, 0.1) 0%, rgba(15, 23, 42, 0.75) 100%);
+        }
+
+        .xor-truth-table {
+            max-width: 440px;
+            margin: 0 auto;
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            font-size: 1.15rem;
+        }
+
+        /* Notificação (Toast) */
+        .toast-custom {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #10b981;
+            color: white;
+            font-size: 1.25rem;
+            padding: 16px 30px;
+            border-radius: 12px;
+            font-weight: 700;
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.5);
+            transform: translateY(120px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 9999;
+        }
+
+        .toast-custom.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                font-size: 1.05rem;
+            }
+
+            .math-formula {
+                font-size: 1.4rem;
+            }
+
+            .brand-title {
+                font-size: 1.4rem;
+            }
+
+            .nav-tech {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .nav-tech .nav-link {
+                text-align: center;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Barra de Topo -->
+    <nav class="navbar-tech py-3 mb-4">
+        <div class="container-fluid px-lg-5 d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="p-3 rounded-4"
+                    style="background: rgba(34, 211, 238, 0.15); border: 1.5px solid rgba(34, 211, 238, 0.3);">
+                    <i class="bi bi-broadcast-pin text-info fs-1"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0 brand-title">TeleLab: CRC &amp; Modulações Digitais</h3>
+                    <div class="text-secondary fw-semibold fs-5">Simulador Universal &bull; Análise Visual de
+                        Telecomunicações</div>
+                </div>
+            </div>
+            <span class="badge rounded-pill fs-6 px-4 py-3"
+                style="background: rgba(34, 211, 238, 0.15); color: var(--primary-cyan); border: 1.5px solid rgba(34, 211, 238, 0.4);">
+                <i class="bi bi-cpu me-2"></i> Engenharia &amp; Redes de Computadores
+            </span>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-lg-5 pb-5">
+
+        <!-- Abas Principais -->
+        <div class="mb-4">
+            <ul class="nav nav-tech" id="mainTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active w-100" id="sim-tab" data-bs-toggle="tab" data-bs-target="#simulador"
+                        type="button" role="tab">
+                        <i class="bi bi-sliders2 me-2"></i>Simulador &amp; Osciloscópio
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link w-100" id="aula-tab" data-bs-toggle="tab" data-bs-target="#aula"
+                        type="button" role="tab">
+                        <i class="bi bi-journal-code me-2"></i>Aula Teórica Completa
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tab-content" id="mainTabsContent">
+
+            <!-- ========================================== -->
+            <!-- ABA 1: SIMULADOR                           -->
+            <!-- ========================================== -->
+            <div class="tab-pane fade show active" id="simulador" role="tabpanel">
+
+                <!-- Painel CRC Universal -->
+                <div class="card card-tech p-4 p-md-5 mb-4 delay-1">
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                        <div>
+                            <h4 class="fw-bold mb-1 text-info fs-3">
+                                <i class="bi bi-cpu me-2"></i>Motor Polinomial CRC (Universal)
+                            </h4>
+                            <p class="text-secondary mb-0 fs-5">Insira livremente qualquer sequência de dados e qualquer
+                                divisor binário</p>
+                        </div>
+                        <span
+                            class="badge bg-secondary bg-opacity-25 text-light border border-secondary px-3 py-2 fs-6">
+                            Aritmética Módulo 2 &middot; XOR
+                        </span>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-12 col-md-5">
+                            <label class="form-label text-white fw-bold fs-5">Mensagem de Dados M(x):</label>
+                            <input type="text" id="inputMensagem"
+                                class="form-control form-control-lg font-bits text-warning fw-bold fs-4"
+                                value="10110011" placeholder="Ex: 10110011">
+                            <div class="text-secondary mt-1 fw-medium">Sequência binária gerada pela fonte de dados
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <label class="form-label text-white fw-bold fs-5">Polinômio Divisor G(x):</label>
+                            <input type="text" id="inputDivisor"
+                                class="form-control form-control-lg font-bits text-info fw-bold fs-4" value="1101"
+                                placeholder="Ex: 1101">
+                            <div class="text-secondary mt-1 fw-medium">Grau r = número de bits do divisor &minus; 1
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 d-flex align-items-end">
+                            <button class="btn btn-tech w-100 py-3" id="btnCalcularCRC">
+                                <i class="bi bi-lightning-charge-fill me-2"></i> Calcular CRC &amp; Traçar Ondas
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Resultados do CRC em Destaque Visual -->
+                    <div class="row g-4 mt-3">
+                        <div class="col-12 col-lg-5">
+                            <div class="p-4 rounded-4"
+                                style="background: rgba(0,0,0,0.5); border: 2px solid var(--card-border);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-white fs-5 fw-bold">RESTO DO CRC:</span>
+                                    <span class="badge bg-danger fs-6 px-3 py-2" id="badgeCrcLength">3 bits</span>
+                                </div>
+                                <div class="fw-bold text-danger font-bits mb-3"
+                                    style="font-size: 2.8rem; line-height: 1.1;" id="txtCrcOutput">000</div>
+
+                                <span class="text-white fs-6 fw-bold d-block mb-2">PALAVRA-CÓDIGO (MENSAGEM +
+                                    CRC):</span>
+                                <div class="input-group">
+                                    <input type="text" id="txtChaveCompleta"
+                                        class="form-control font-bits text-success fw-bold fs-4" readonly value="">
+                                    <button class="btn btn-outline-cyan px-4" id="btnCopiarChave"
+                                        title="Copiar Palavra-Código">
+                                        <i class="bi bi-clipboard-check fs-5"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-7">
+                            <div class="d-flex justify-content-between align-items-end mb-2">
+                                <label class="text-white fs-5 fw-bold mb-0">LOG DA DIVISÃO POLINOMIAL XOR (PASSO A
+                                    PASSO)</label>
+                                <span class="badge bg-dark border border-secondary text-info font-bits fs-6 px-3 py-2"
+                                    id="txtQuociente">Q = 0</span>
+                            </div>
+                            <div class="xor-step" id="boxPassosXor"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Painel de Transmissão Direta e Osciloscópio -->
+                <div class="card card-tech p-4 p-md-5 mb-4 delay-2">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-12 col-lg-6">
+                            <label class="form-label text-info fw-bold fs-4 mb-2">
+                                <i class="bi bi-keyboard me-2"></i> Chave de Bits Ativa (Edição Livre em Tempo Real)
+                            </label>
+                            <div class="input-group">
+                                <input type="text" id="inputModulacaoManual"
+                                    class="form-control form-control-lg font-bits text-white fw-bold fs-3" value="">
+                                <button class="btn btn-outline-danger px-4" id="btnLimpar" title="Limpar campo">
+                                    <i class="bi bi-eraser fs-4"></i>
+                                </button>
+                            </div>
+                            <div class="d-flex gap-3 mt-3 flex-wrap">
+                                <button class="btn btn-outline-cyan py-2 px-3" id="btnAleatorio8">
+                                    <i class="bi bi-shuffle me-1"></i> 8 Bits Aleatórios
+                                </button>
+                                <button class="btn btn-outline-cyan py-2 px-3" id="btnAleatorio16">
+                                    <i class="bi bi-shuffle me-1"></i> 16 Bits
+                                </button>
+                                <button class="btn btn-outline-secondary py-2 px-3 text-white" id="btnInverter">
+                                    <i class="bi bi-arrow-left-right me-1"></i> Inverter Bits (NOT)
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 border-start-lg border-secondary ps-lg-5">
+                            <label class="form-label text-info fw-bold fs-4 mb-3">
+                                <i class="bi bi-aspect-ratio me-2"></i> Ajustes Visuais do Osciloscópio
+                            </label>
+                            <div class="row g-4">
+                                <div class="col-6">
+                                    <label class="form-label text-white fw-bold fs-5 mb-2">Largura do Bit (Zoom
+                                        X):</label>
+                                    <input type="range" class="form-range" id="rangeZoom" min="45" max="150" value="80">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label text-white fw-bold fs-5 mb-2">Ciclos por Bit
+                                        (Portadora):</label>
+                                    <input type="range" class="form-range" id="rangeCiclos" min="1" max="4" value="2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráficos das Ondas -->
+                <div class="row g-4">
+
+                    <!-- Banda Base -->
+                    <div class="col-12 delay-3">
+                        <div class="card card-tech p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                <h5 class="fw-bold mb-0 fs-4" style="color: var(--base-color);">
+                                    <i class="bi bi-bar-chart-steps me-2"></i>1. Trem de Pulsos em Banda Base (Digital
+                                    NRZ-L)
+                                </h5>
+                                <span class="badge bg-dark border border-secondary text-light fs-6 px-3 py-2">
+                                    Nível 1 = Tensão Alta (+V) &bull; Nível 0 = Tensão Baixa (0V)
+                                </span>
+                            </div>
+                            <div class="canvas-wrapper">
+                                <canvas id="canvasBase" height="110"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ASK -->
+                    <div class="col-12 delay-3">
+                        <div class="card card-tech p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                <h5 class="fw-bold mb-0 fs-4" style="color: var(--ask-color);">
+                                    <i class="bi bi-activity me-2"></i>2. ASK (Amplitude Shift Keying &middot; OOK)
+                                </h5>
+                                <span class="badge bg-warning text-dark fs-6 px-3 py-2 fw-bold">
+                                    Bit 1: Portadora Presente (A = 1) &bull; Bit 0: Amplitude Zero (A = 0)
+                                </span>
+                            </div>
+                            <div class="canvas-wrapper">
+                                <canvas id="canvasASK" height="140"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FSK -->
+                    <div class="col-12 delay-4">
+                        <div class="card card-tech p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                <h5 class="fw-bold mb-0 fs-4" style="color: var(--fsk-color);">
+                                    <i class="bi bi-soundwave me-2"></i>3. FSK (Frequency Shift Keying)
+                                </h5>
+                                <span class="badge bg-success text-white fs-6 px-3 py-2 fw-bold">
+                                    Bit 1: Frequência Alta (f₁) &bull; Bit 0: Frequência Baixa (f₀)
+                                </span>
+                            </div>
+                            <div class="canvas-wrapper">
+                                <canvas id="canvasFSK" height="140"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PSK -->
+                    <div class="col-12 delay-4">
+                        <div class="card card-tech p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                <h5 class="fw-bold mb-0 fs-4" style="color: var(--psk-color);">
+                                    <i class="bi bi-water me-2"></i>4. PSK / BPSK (Phase Shift Keying)
+                                </h5>
+                                <span class="badge bg-info text-dark fs-6 px-3 py-2 fw-bold">
+                                    Bit 1: Fase 0&deg; &bull; Bit 0: Fase Invertida 180&deg; (&pi; radianos)
+                                </span>
+                            </div>
+                            <div class="canvas-wrapper">
+                                <canvas id="canvasPSK" height="140"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Tabela Dinâmica com Alta Visibilidade -->
+                <div class="card card-tech p-4 p-md-5 mt-4 delay-4">
+                    <h4 class="fw-bold text-white mb-4 fs-3">
+                        <i class="bi bi-table me-2 text-info"></i>Tabela de Estados Físicos de Cada Bit Transmitido
+                    </h4>
+                    <div class="table-responsive">
+                        <table class="table table-tech text-center align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th># Posição</th>
+                                    <th>Origem do Bit</th>
+                                    <th>Valor Lógico</th>
+                                    <th>Modulação ASK (Amplitude)</th>
+                                    <th>Modulação FSK (Frequência)</th>
+                                    <th>Modulação PSK (Fase)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaEstadosCorpo"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ========================================== -->
+            <!-- ABA 2: AULA TEÓRICA COMPLETA               -->
+            <!-- ========================================== -->
+            <div class="tab-pane fade" id="aula" role="tabpanel">
+
+                <!-- 1. Introdução à Modulação Digital -->
+                <div class="card card-tech p-4 p-md-5 mb-4 delay-1">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <span
+                            class="theory-badge bg-info bg-opacity-25 text-info border border-info border-opacity-50 fs-6">Fundamento
+                            I</span>
+                        <h2 class="fw-bold text-info mb-0 fs-2">O Que É Modulação Digital e Para Que Serve?</h2>
+                    </div>
+
+                    <p class="text-white fs-4 leading-relaxed mt-3">
+                        No interior de computadores e processadores, a informação trafega na forma de sinais digitais
+                        discretos (bits <code>0</code> e <code>1</code> em corrente contínua). No entanto, o meio físico
+                        de transmissão — como a atmosfera (antenas de rádio), cabos coaxiais ou fibra óptica — é um
+                        ambiente essencialmente <strong class="text-info">analógico</strong> governado pelas leis do
+                        eletromagnetismo.
+                    </p>
+
+                    <div class="p-4 my-4 rounded-4"
+                        style="background: rgba(34, 211, 238, 0.1); border-left: 6px solid var(--primary-cyan);">
+                        <div class="text-white fs-3 fw-bold mb-2">Definição Oficial de Telecomunicações:</div>
+                        <p class="text-white fs-4 mb-0 leading-relaxed">
+                            <strong>Modulação</strong> é o processo físico no qual uma ou mais características de uma
+                            onda analógica contínua de alta frequência (a chamada <strong class="text-info">onda
+                                portadora</strong>) são alteradas em função do sinal digital que se deseja transmitir
+                            pelo canal.
+                        </p>
+                    </div>
+
+                    <h4 class="fw-bold text-white mt-5 mb-3 fs-3">A Equação Fundamental da Onda Portadora Senoidal:</h4>
+                    <div class="math-box text-center my-4">
+                        <div class="math-formula">
+                            s(t) = A(t) &middot; sen( 2&pi; &middot; f(t) &middot; t + &phi;(t) )
+                        </div>
+                    </div>
+
+                    <p class="text-white fs-4 mt-4 mb-3">
+                        Manipulando separadamente cada variável dessa equação, derivam-se as três grandes famílias de
+                        modulação digital:
+                    </p>
+                    <ul class="text-white fs-4 mb-0 ps-4 leading-relaxed">
+                        <li class="mb-3">Variando a amplitude <strong class="text-warning">A(t)</strong> &rarr; <strong
+                                class="text-warning">ASK</strong> (<em>Amplitude Shift Keying</em>).</li>
+                        <li class="mb-3">Variando a frequência <strong class="text-success">f(t)</strong> &rarr; <strong
+                                class="text-success">FSK</strong> (<em>Frequency Shift Keying</em>).</li>
+                        <li class="mb-0">Variando o ângulo de fase inicial <strong class="text-info">&phi;(t)</strong>
+                            &rarr; <strong class="text-info">PSK</strong> (<em>Phase Shift Keying</em>).</li>
+                    </ul>
+                </div>
+
+                <!-- 2. Comparativo Detalhado das Três Modulações -->
+                <div class="row g-4 mb-4">
+
+                    <!-- ASK -->
+                    <div class="col-12 col-lg-4 delay-2">
+                        <div class="card card-tech card-theory-ask p-4 p-md-5 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="fw-bold text-warning mb-0 fs-2"><i class="bi bi-activity me-2"></i>ASK</h3>
+                                <span class="theory-badge bg-warning bg-opacity-25 text-warning fs-6">Amplitude</span>
+                            </div>
+                            <h5 class="text-white fw-bold mb-3 fs-4">Chaveamento por Amplitude (OOK)</h5>
+                            <p class="text-white fs-5 mb-3 leading-relaxed">
+                                Na forma binária clássica — chamada <em>On-Off Keying</em> (OOK) —, a presença da
+                                portadora determina o valor lógico:
+                            </p>
+                            <ul class="fs-5 text-white ps-4 mb-4 leading-relaxed">
+                                <li class="mb-2"><strong>Bit 1:</strong> Portadora ligada em amplitude máxima (<span
+                                        class="font-bits text-warning fw-bold">A = 1</span>).</li>
+                                <li class="mb-2"><strong>Bit 0:</strong> Ausência total de sinal, amplitude nula (<span
+                                        class="font-bits text-secondary fw-bold">A = 0</span>).</li>
+                            </ul>
+                            <hr style="border-color: rgba(251, 191, 36, 0.4);">
+                            <div class="fs-5 leading-relaxed">
+                                <strong class="text-success d-block mb-1"><i
+                                        class="bi bi-check-circle-fill me-2"></i>Vantagem Principal:</strong>
+                                <p class="text-white mb-3">Circuitos transmissores e receptores extremamente simples e
+                                    baratos (detecção por envoltória).</p>
+
+                                <strong class="text-danger d-block mb-1"><i
+                                        class="bi bi-exclamation-triangle-fill me-2"></i>Desvantagem:</strong>
+                                <p class="text-white mb-3">Muito frágil contra ruídos eletromagnéticos, estática
+                                    atmosférica e variações de atenuação.</p>
+
+                                <strong class="text-info d-block mb-1"><i class="bi bi-broadcast me-2"></i>Aplicações no
+                                    Mundo Real:</strong>
+                                <p class="text-white mb-0">Controles remotos de portão (433 MHz), chaves RF veiculares e
+                                    fibras ópticas simples liga/desliga.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FSK -->
+                    <div class="col-12 col-lg-4 delay-3">
+                        <div class="card card-tech card-theory-fsk p-4 p-md-5 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="fw-bold text-success mb-0 fs-2"><i class="bi bi-soundwave me-2"></i>FSK</h3>
+                                <span class="theory-badge bg-success bg-opacity-25 text-success fs-6">Frequência</span>
+                            </div>
+                            <h5 class="text-white fw-bold mb-3 fs-4">Chaveamento por Frequência</h5>
+                            <p class="text-white fs-5 mb-3 leading-relaxed">
+                                A amplitude e a fase continuam inalteradas; o transmissor comuta entre dois tons de
+                                oscilação:
+                            </p>
+                            <ul class="fs-5 text-white ps-4 mb-4 leading-relaxed">
+                                <li class="mb-2"><strong>Bit 1:</strong> Frequência alta (<span
+                                        class="font-bits text-success fw-bold">f₁</span>, frequência de marca).</li>
+                                <li class="mb-2"><strong>Bit 0:</strong> Frequência baixa (<span
+                                        class="font-bits text-secondary fw-bold">f₀</span>, frequência de espaço).</li>
+                            </ul>
+                            <hr style="border-color: rgba(52, 211, 153, 0.4);">
+                            <div class="fs-5 leading-relaxed">
+                                <strong class="text-success d-block mb-1"><i
+                                        class="bi bi-check-circle-fill me-2"></i>Vantagem Principal:</strong>
+                                <p class="text-white mb-3">Excelente imunidade contra ruídos de amplitude, pois o dado
+                                    está codificado no ritmo de oscilação.</p>
+
+                                <strong class="text-danger d-block mb-1"><i
+                                        class="bi bi-exclamation-triangle-fill me-2"></i>Desvantagem:</strong>
+                                <p class="text-white mb-3">Ocupa maior largura de banda no espectro de rádio para manter
+                                    a separação entre f₀ e f₁.</p>
+
+                                <strong class="text-info d-block mb-1"><i class="bi bi-broadcast me-2"></i>Aplicações no
+                                    Mundo Real:</strong>
+                                <p class="text-white mb-0">Identificação de chamadas telefônicas (BINA), modems discados
+                                    (V.21), telemetria industrial e rádio teletipo (RTTY).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PSK -->
+                    <div class="col-12 col-lg-4 delay-4">
+                        <div class="card card-tech card-theory-psk p-4 p-md-5 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="fw-bold text-info mb-0 fs-2"><i class="bi bi-water me-2"></i>PSK</h3>
+                                <span class="theory-badge bg-info bg-opacity-25 text-info fs-6">Fase / BPSK</span>
+                            </div>
+                            <h5 class="text-white fw-bold mb-3 fs-4">Chaveamento por Fase (BPSK)</h5>
+                            <p class="text-white fs-5 mb-3 leading-relaxed">
+                                Amplitude e frequência são rigorosamente constantes; o ângulo de partida da senoide
+                                sofre um salto instantâneo:
+                            </p>
+                            <ul class="fs-5 text-white ps-4 mb-4 leading-relaxed">
+                                <li class="mb-2"><strong>Bit 1:</strong> Fase de <span
+                                        class="font-bits text-info fw-bold">0&deg;</span> (a curva senoidal inicia
+                                    subindo).</li>
+                                <li class="mb-2"><strong>Bit 0:</strong> Fase de <span
+                                        class="font-bits text-danger fw-bold">180&deg; (&pi; rad)</span> (inversão
+                                    instantânea, a curva inicia descendo).</li>
+                            </ul>
+                            <hr style="border-color: rgba(96, 165, 250, 0.4);">
+                            <div class="fs-5 leading-relaxed">
+                                <strong class="text-success d-block mb-1"><i
+                                        class="bi bi-check-circle-fill me-2"></i>Vantagem Principal:</strong>
+                                <p class="text-white mb-3">Maior eficiência energética e melhor taxa de transmissão em
+                                    canais ruidosos entre todas as técnicas binárias.</p>
+
+                                <strong class="text-danger d-block mb-1"><i
+                                        class="bi bi-exclamation-triangle-fill me-2"></i>Desvantagem:</strong>
+                                <p class="text-white mb-3">Requer demoduladores coerentes com circuitos de sincronismo
+                                    de fase complexos.</p>
+
+                                <strong class="text-info d-block mb-1"><i class="bi bi-broadcast me-2"></i>Aplicações no
+                                    Mundo Real:</strong>
+                                <p class="text-white mb-0">Redes Wi-Fi (802.11b), Bluetooth, comunicação via Satélite
+                                    (GPS, DVB-S2) e a base de QPSK e QAM no 4G e 5G.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 3. Detecção de Erros com CRC (Cyclic Redundancy Check) -->
+                <div class="card card-tech p-4 p-md-5 delay-2">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <span
+                            class="theory-badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-50 fs-6">Fundamento
+                            II</span>
+                        <h3 class="fw-bold text-danger mb-0 fs-2"><i class="bi bi-shield-check me-2"></i>Detecção de
+                            Erros: O Que É o CRC e Como Ele Funciona?</h3>
+                    </div>
+
+                    <p class="text-white fs-4 leading-relaxed mt-3">
+                        Durante a propagação da onda no meio analógico, interferências podem corromper símbolos,
+                        invertendo bits (fazendo um <code>1</code> virar <code>0</code> ou vice-versa). O <strong
+                            class="text-white">CRC (Cyclic Redundancy Check)</strong> é um mecanismo da Camada de Enlace
+                        que permite ao receptor verificar com precisão matemática se a mensagem sofreu qualquer
+                        alteração no percurso.
+                    </p>
+
+                    <div class="row g-4 mt-3">
+                        <!-- Lógica do XOR -->
+                        <div class="col-12 col-md-5">
+                            <div class="p-4 rounded-4 h-100"
+                                style="background: rgba(0,0,0,0.5); border: 2px solid var(--card-border);">
+                                <h5 class="fw-bold text-info mb-3 fs-4"><i class="bi bi-shuffle me-2"></i>Aritmética
+                                    Módulo 2 (Porta XOR)</h5>
+                                <p class="text-white fs-5 mb-4 leading-relaxed">
+                                    A divisão binária do CRC não possui "vai-um" nem empréstimo. Ela utiliza puramente a
+                                    operação lógica <strong class="text-white">OU-Exclusivo (XOR)</strong>:
+                                </p>
+                                <div class="xor-truth-table">
+                                    <table
+                                        class="table table-dark table-bordered text-center align-middle mb-0 font-bits">
+                                        <thead class="table-secondary text-dark fs-5">
+                                            <tr>
+                                                <th>Bit A</th>
+                                                <th>Bit B</th>
+                                                <th>A &oplus; B (XOR)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="fs-5">
+                                            <tr>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td class="text-secondary fw-bold">0 (bits iguais)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>0</td>
+                                                <td>1</td>
+                                                <td class="text-info fw-bold">1 (diferentes)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0</td>
+                                                <td class="text-info fw-bold">1 (diferentes)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>1</td>
+                                                <td class="text-secondary fw-bold">0 (bits iguais)</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Passo a Passo do Algoritmo -->
+                        <div class="col-12 col-md-7">
+                            <div class="p-4 rounded-4 h-100"
+                                style="background: rgba(0,0,0,0.5); border: 2px solid var(--card-border);">
+                                <h5 class="fw-bold text-success mb-3 fs-4"><i class="bi bi-list-ol me-2"></i>Passo a
+                                    Passo Rigoroso do Cálculo</h5>
+                                <ol class="text-white fs-5 ps-4 mb-0 leading-relaxed">
+                                    <li class="mb-3">
+                                        Seja <strong class="text-info">M</strong> a mensagem de dados e <strong
+                                            class="text-info">G</strong> o polinômio divisor de tamanho <span
+                                            class="text-warning font-bits fw-bold">n</span> bits. O grau do polinômio é
+                                        <span class="text-warning font-bits fw-bold">r = n &minus; 1</span>.
+                                    </li>
+                                    <li class="mb-3">
+                                        Anexam-se exatamente <span class="text-warning font-bits fw-bold">r</span> zeros
+                                        ao final da mensagem original <strong class="text-info">M</strong>, gerando a
+                                        sequência expandida de trabalho.
+                                    </li>
+                                    <li class="mb-3">
+                                        Alinha-se o divisor <strong class="text-info">G</strong> com o primeiro bit
+                                        <code>1</code> mais à esquerda e executa-se a operação XOR bit a bit.
+                                    </li>
+                                    <li class="mb-3">
+                                        O processo repete-se sucessivamente deslocando-se para a direita a cada zero
+                                        resultante, até processar todos os bits da mensagem.
+                                    </li>
+                                    <li class="mb-3">
+                                        O resíduo remanescente final de <span
+                                            class="text-warning font-bits fw-bold">r</span> bits é o <strong
+                                            class="text-danger fw-bold">Resto do CRC</strong>.
+                                    </li>
+                                    <li class="mb-0">
+                                        A sequência transmitida pelo canal é: <strong
+                                            class="text-success font-bits fw-bold">Palavra = Mensagem + CRC</strong>. O
+                                        receptor refaz a divisão pelo mesmo divisor <strong
+                                            class="text-info">G</strong>: se o resto for zero, o quadro é aceito como
+                                        100% íntegro!
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Notificação Flutuante de Cópia -->
+    <div class="toast-custom" id="toastMsg">
+        <i class="bi bi-check-circle-fill me-2"></i>Palavra-Código copiada com sucesso!
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // --- Referências DOM ---
+        const inputMensagem = document.getElementById('inputMensagem');
+        const inputDivisor = document.getElementById('inputDivisor');
+        const btnCalcularCRC = document.getElementById('btnCalcularCRC');
+        const txtCrcOutput = document.getElementById('txtCrcOutput');
+        const badgeCrcLength = document.getElementById('badgeCrcLength');
+        const txtChaveCompleta = document.getElementById('txtChaveCompleta');
+        const boxPassosXor = document.getElementById('boxPassosXor');
+        const txtQuociente = document.getElementById('txtQuociente');
+        const inputModulacaoManual = document.getElementById('inputModulacaoManual');
+        const tabelaEstadosCorpo = document.getElementById('tabelaEstadosCorpo');
+
+        const btnLimpar = document.getElementById('btnLimpar');
+        const btnAleatorio8 = document.getElementById('btnAleatorio8');
+        const btnAleatorio16 = document.getElementById('btnAleatorio16');
+        const btnInverter = document.getElementById('btnInverter');
+        const rangeZoom = document.getElementById('rangeZoom');
+        const rangeCiclos = document.getElementById('rangeCiclos');
+        const btnCopiarChave = document.getElementById('btnCopiarChave');
+        const toastMsg = document.getElementById('toastMsg');
+
+        const limparBinario = s => s.replace(/[^01]/g, '');
+
+        // --- Motor Polinomial CRC Universal ---
+        function calcularCRCUniversal(msg, divisor) {
+            const r = divisor.length - 1;
+            if (r <= 0) return { crc: '', chaveCompleta: msg, passos: ['Divisor inválido (precisa ter ≥ 2 bits)'], quociente: '', r: 0 };
+
+            const paddedMsg = msg + '0'.repeat(r);
+            let rem = paddedMsg.split('');
+            let div = divisor.split('');
+            let passos = [];
+            let quociente = '';
+
+            passos.push(`1. Mensagem expandida com ${r} zeros: ${paddedMsg}`);
+            passos.push(`2. Polinômio divisor G(x): ${divisor}`);
+            passos.push(`----------------------------------------------------------------`);
+
+            for (let i = 0; i <= rem.length - divisor.length; i++) {
+                if (rem[i] === '1') {
+                    quociente += '1';
+                    let pedacoAntes = rem.slice(i, i + divisor.length).join('');
+                    for (let j = 0; j < divisor.length; j++) {
+                        rem[i + j] = (rem[i + j] === div[j]) ? '0' : '1';
+                    }
+                    let pedacoDepois = rem.slice(i, i + divisor.length).join('');
+                    passos.push(`Posição ${i + 1}: ${pedacoAntes} ⊕ ${divisor} = ${pedacoDepois}`);
+                } else {
+                    quociente += '0';
+                }
+            }
+
+            const crc = rem.slice(-r).join('');
+            passos.push(`----------------------------------------------------------------`);
+            passos.push(`Resto final do CRC (${r} bits): ${crc}`);
+            passos.push(`Palavra-código transmitida (Codeword): ${msg + crc}`);
+
+            return { crc, chaveCompleta: msg + crc, passos, quociente, r };
+        }
+
+        // --- Renderização da Tabela Bit a Bit com Letras Amplas ---
+        function atualizarTabela(bits, msgLength) {
+            tabelaEstadosCorpo.innerHTML = '';
+            bits.forEach((b, idx) => {
+                const isOriginal = idx < msgLength;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="text-white fw-bold fs-5">${idx + 1}</td>
+                    <td><span class="badge ${isOriginal ? 'bg-primary' : 'bg-danger'} fs-6 px-3 py-2">${isOriginal ? 'MENSAGEM' : 'CRC'}</span></td>
+                    <td class="fw-bold font-bits fs-4 ${b === '1' ? 'text-info' : 'text-secondary'}">${b}</td>
+                    <td>${b === '1' ? '<span class="text-warning fw-bold fs-5">Portadora Ativa (A = 1)</span>' : '<span class="text-secondary fs-5">Desligada (A = 0)</span>'}</td>
+                    <td>${b === '1' ? '<span class="text-success fw-bold fs-5">Frequência Alta (f₁)</span>' : '<span class="text-white fs-5">Frequência Baixa (f₀)</span>'}</td>
+                    <td>${b === '1' ? '<span class="text-info fw-bold fs-5">Fase 0&deg; (Normal)</span>' : '<span class="text-danger fw-bold fs-5">Fase Invertida 180&deg; (&pi;)</span>'}</td>
+                `;
+                tabelaEstadosCorpo.appendChild(row);
+            });
+        }
+
+        // --- Canvas e Traçado das Ondas com Linhas e Rótulos Grandes ---
+        function prepararCanvas(canvasId, totalBits, bitWidth) {
+            const canvas = document.getElementById(canvasId);
+            const dpr = window.devicePixelRatio || 1;
+            const containerWidth = canvas.parentElement.clientWidth - 36;
+            const totalWidth = Math.max(containerWidth, totalBits * bitWidth);
+            const hAttr = parseInt(canvas.getAttribute('height'), 10);
+
+            canvas.style.width = totalWidth + 'px';
+            canvas.width = totalWidth * dpr;
+            canvas.height = hAttr * dpr;
+            canvas.style.height = hAttr + 'px';
+
+            const ctx = canvas.getContext('2d');
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.shadowBlur = 10;
+
+            return { ctx, width: totalWidth, height: hAttr, bitWidth };
+        }
+
+        function desenharEixosEGrid(ctx, bits, bitWidth, height) {
+            ctx.clearRect(0, 0, ctx.canvas.width, height);
+            ctx.shadowBlur = 0;
+            const midY = height / 2;
+
+            // Linha central de amplitude zero
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(0, midY);
+            ctx.lineTo(ctx.canvas.width, midY);
+            ctx.stroke();
+
+            // Divisórias verticais e Rótulos com Letras Grandes (16px)
+            bits.forEach((bit, i) => {
+                const x = i * bitWidth;
+                ctx.strokeStyle = '#475569';
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Rótulo grande do Bit no topo
+                ctx.fillStyle = (bit === '1') ? '#38bdf8' : '#94a3b8';
+                ctx.font = 'bold 16px "JetBrains Mono", monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(`b[${i}]=${bit}`, x + bitWidth / 2, 20);
+            });
+
+            ctx.strokeStyle = '#475569';
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(bits.length * bitWidth, 0);
+            ctx.lineTo(bits.length * bitWidth, height);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function desenharBandaBase(bits, bitWidth) {
+            const { ctx, height } = prepararCanvas('canvasBase', bits.length, bitWidth);
+            desenharEixosEGrid(ctx, bits, bitWidth, height);
+
+            const highY = 32, lowY = height - 18;
+            ctx.strokeStyle = '#c084fc';
+            ctx.lineWidth = 3.5;
+            ctx.shadowColor = '#c084fc';
+            ctx.beginPath();
+
+            bits.forEach((bit, i) => {
+                const xStart = i * bitWidth;
+                const xEnd = xStart + bitWidth;
+                const targetY = (bit === '1') ? highY : lowY;
+
+                if (i === 0) ctx.moveTo(xStart, targetY);
+                else {
+                    const prevY = (bits[i - 1] === '1') ? highY : lowY;
+                    if (prevY !== targetY) ctx.lineTo(xStart, targetY);
+                }
+                ctx.lineTo(xEnd, targetY);
+            });
+            ctx.stroke();
+        }
+
+        function desenharASK(bits, bitWidth, cycles) {
+            const { ctx, height } = prepararCanvas('canvasASK', bits.length, bitWidth);
+            desenharEixosEGrid(ctx, bits, bitWidth, height);
+
+            const midY = height / 2 + 8, amp = height * 0.36;
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 3;
+            ctx.shadowColor = '#fbbf24';
+            ctx.beginPath();
+
+            let started = false;
+            bits.forEach((bit, i) => {
+                const xStart = i * bitWidth;
+                const isOne = (bit === '1');
+                const samples = 100;
+
+                for (let s = 0; s <= samples; s++) {
+                    const t = s / samples;
+                    const x = xStart + t * bitWidth;
+                    const y = isOne ? midY - amp * Math.sin(2 * Math.PI * cycles * t) : midY;
+                    if (!started) { ctx.moveTo(x, y); started = true; } else { ctx.lineTo(x, y); }
+                }
+            });
+            ctx.stroke();
+        }
+
+        function desenharFSK(bits, bitWidth, baseCycles) {
+            const { ctx, height } = prepararCanvas('canvasFSK', bits.length, bitWidth);
+            desenharEixosEGrid(ctx, bits, bitWidth, height);
+
+            const midY = height / 2 + 8, amp = height * 0.36;
+            ctx.strokeStyle = '#34d399';
+            ctx.lineWidth = 3;
+            ctx.shadowColor = '#34d399';
+            ctx.beginPath();
+
+            let started = false;
+            bits.forEach((bit, i) => {
+                const xStart = i * bitWidth;
+                const cycles = (bit === '1') ? (baseCycles * 2) : baseCycles;
+                const samples = 100;
+
+                for (let s = 0; s <= samples; s++) {
+                    const t = s / samples;
+                    const x = xStart + t * bitWidth;
+                    const y = midY - amp * Math.sin(2 * Math.PI * cycles * t);
+                    if (!started) { ctx.moveTo(x, y); started = true; } else { ctx.lineTo(x, y); }
+                }
+            });
+            ctx.stroke();
+        }
+
+        function desenharPSK(bits, bitWidth, cycles) {
+            const { ctx, height } = prepararCanvas('canvasPSK', bits.length, bitWidth);
+            desenharEixosEGrid(ctx, bits, bitWidth, height);
+
+            const midY = height / 2 + 8, amp = height * 0.36;
+            ctx.strokeStyle = '#60a5fa';
+            ctx.lineWidth = 3;
+            ctx.shadowColor = '#60a5fa';
+            ctx.beginPath();
+
+            let started = false;
+            bits.forEach((bit, i) => {
+                const xStart = i * bitWidth;
+                const phase = (bit === '1') ? 0 : Math.PI;
+                const samples = 100;
+
+                for (let s = 0; s <= samples; s++) {
+                    const t = s / samples;
+                    const x = xStart + t * bitWidth;
+                    const y = midY - amp * Math.sin(2 * Math.PI * cycles * t + phase);
+                    if (!started) { ctx.moveTo(x, y); started = true; } else { ctx.lineTo(x, y); }
+                }
+            });
+            ctx.stroke();
+        }
+
+        function renderizarSinais(bits, msgLength) {
+            const bitWidth = parseInt(rangeZoom.value, 10);
+            const cycles = parseInt(rangeCiclos.value, 10);
+
+            desenharBandaBase(bits, bitWidth);
+            desenharASK(bits, bitWidth, cycles);
+            desenharFSK(bits, bitWidth, cycles);
+            desenharPSK(bits, bitWidth, cycles);
+            atualizarTabela(bits, msgLength);
+        }
+
+        // --- Execução Principal do CRC ---
+        function executarCRC() {
+            let msg = limparBinario(inputMensagem.value) || '10110011';
+            let div = limparBinario(inputDivisor.value);
+            if (div.length < 2) div = '1101';
+
+            inputMensagem.value = msg;
+            inputDivisor.value = div;
+
+            const res = calcularCRCUniversal(msg, div);
+            txtCrcOutput.innerText = res.crc || '0';
+            badgeCrcLength.innerText = `${res.r} bits`;
+            txtChaveCompleta.value = res.chaveCompleta;
+            txtQuociente.innerText = `Q = ${res.quociente}`;
+            boxPassosXor.innerHTML = res.passos.map(p => `<div>${p}</div>`).join('');
+
+            inputModulacaoManual.value = res.chaveCompleta;
+            renderizarSinais(res.chaveCompleta.split(''), msg.length);
+        }
+
+        // --- Event Listeners ---
+        inputModulacaoManual.addEventListener('input', () => {
+            let bitsStr = limparBinario(inputModulacaoManual.value) || '1';
+            renderizarSinais(bitsStr.split(''), bitsStr.length);
+        });
+
+        rangeZoom.addEventListener('input', () => {
+            let bitsStr = limparBinario(inputModulacaoManual.value) || '1';
+            renderizarSinais(bitsStr.split(''), bitsStr.length);
+        });
+
+        rangeCiclos.addEventListener('input', () => {
+            let bitsStr = limparBinario(inputModulacaoManual.value) || '1';
+            renderizarSinais(bitsStr.split(''), bitsStr.length);
+        });
+
+        btnLimpar.addEventListener('click', () => {
+            inputModulacaoManual.value = '';
+            renderizarSinais(['0'], 1);
+            inputModulacaoManual.focus();
+        });
+
+        btnAleatorio8.addEventListener('click', () => {
+            let r = ''; for (let i = 0; i < 8; i++) r += Math.random() > 0.5 ? '1' : '0';
+            inputModulacaoManual.value = r;
+            renderizarSinais(r.split(''), r.length);
+        });
+
+        btnAleatorio16.addEventListener('click', () => {
+            let r = ''; for (let i = 0; i < 16; i++) r += Math.random() > 0.5 ? '1' : '0';
+            inputModulacaoManual.value = r;
+            renderizarSinais(r.split(''), r.length);
+        });
+
+        btnInverter.addEventListener('click', () => {
+            let bitsStr = limparBinario(inputModulacaoManual.value) || '1';
+            let inv = bitsStr.split('').map(b => b === '1' ? '0' : '1').join('');
+            inputModulacaoManual.value = inv;
+            renderizarSinais(inv.split(''), inv.length);
+        });
+
+        btnCalcularCRC.addEventListener('click', executarCRC);
+
+        btnCopiarChave.addEventListener('click', () => {
+            navigator.clipboard.writeText(txtChaveCompleta.value).then(() => {
+                toastMsg.classList.add('show');
+                setTimeout(() => toastMsg.classList.remove('show'), 2500);
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            let bitsStr = limparBinario(inputModulacaoManual.value) || '1';
+            renderizarSinais(bitsStr.split(''), bitsStr.length);
+        });
+
+        // Inicialização
+        window.onload = executarCRC;
+    </script>
+</body>
+
+</html>
